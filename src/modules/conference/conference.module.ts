@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ControllerController } from './controller/controller.controller';
-import { ServiceService } from './service/service.service';
+import { ConferenceController } from './controller'
+import { ConferenceService } from './service';
+import { CommonModule } from '../common';
 
 @Module({
-  controllers: [ControllerController],
-  providers: [ServiceService]
+  imports: [CommonModule],
+  controllers: [ConferenceController],
+  providers: [ConferenceService],
+  exports : [ConferenceService]
 })
 export class ConferenceModule {}

@@ -14,4 +14,6 @@ export interface Config {
 
     readonly PASSENGERS_ALLOWED: string;
 
+    readonly CONFERENCES_ALLOWED: string;
+
 }

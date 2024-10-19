@@ -43,7 +43,7 @@ create table sources (
     "link" text
 );
 
-create table all_ranks_of_source (
+create table ranks_of_source (
     "id" uuid primary key default uuid_generate_v4(),
     "source_id" uuid,
     "rank" text,
@@ -99,15 +99,15 @@ alter table call_for_papers add constraint fk_cfp_belong_conference foreign key 
 
 -- rank_of_cfc table foreign keys
 alter table rank_of_cfc add constraint fk_cfp_has_rank foreign key (cfc_id) references call_for_papers(id);
-alter table rank_of_cfc add constraint fk_rank_of_cfc foreign key (rank_id) references all_ranks_of_source(id);
+alter table rank_of_cfc add constraint fk_rank_of_cfc foreign key (rank_id) references ranks_of_source(id);
 
--- foreign keys for all_ranks_of_source table
-alter table all_ranks_of_source add constraint fk_rank_of_source foreign key (source_id) references sources(id);
+-- foreign keys for ranks_of_source table
+alter table ranks_of_source add constraint fk_rank_of_source foreign key (source_id) references sources(id);
 
 -- foreign keys for conference_rank_footprints table
 alter table conference_rank_footprints add constraint fk_conference_rank_footprints foreign key (conference_id) references conferences(id);
-alter table conference_rank_footprints add constraint fk_rank_of_conference foreign key (rank_id) references all_ranks_of_source(id);
+alter table conference_rank_footprints add constraint fk_rank_of_conference foreign key (rank_id) references ranks_of_source(id);
 
 -- foreign keys for journal_rank_footprints table
 alter table journal_rank_footprints add constraint fk_journal_rank_footprints foreign key (journal_id) references journals(id);
-alter table journal_rank_footprints add constraint fk_rank_of_journal foreign key (rank_id) references all_ranks_of_source(id);
+alter table journal_rank_footprints add constraint fk_rank_of_journal foreign key (rank_id) references ranks_of_source(id);
