@@ -8,7 +8,7 @@ import { ConferenceData, ConferenceInput } from '../model';
 import { ConferenceService } from '../service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-@Controller('controller')
+@Controller('conference')
 export class ConferenceController {
     public constructor (
         @Inject(Service.CONFIG)
