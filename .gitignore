@@ -1,0 +1,30 @@
+# dependencies
+/node_modules
+
+# IDE
+/.idea
+/.awcache
+/.vscode
+
+# misc
+npm-debug.log
+
+# example
+/quick-start
+
+# tests
+/test
+/coverage
+/.nyc_output
+
+# dist
+/dist
+
+# environment
+.env
+
+#caches
+/yes
+
+#package-lock.json 
+package-lock.json

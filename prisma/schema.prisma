@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Passenger {
+  id        Int    @id @default(autoincrement())
+  firstName String @unique
+  lastName  String
+}
+
+model all_ranks_of_source {
+  id                         String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  source_id                  String?                      @db.Uuid
+  rank                       String?
+  value                      Decimal?                     @db.Decimal
+  sources                    sources?                     @relation(fields: [source_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_source")
+  conference_rank_footprints conference_rank_footprints[]
+  journal_rank_footprints    journal_rank_footprints[]
+  rank_of_cfc                rank_of_cfc[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model call_for_paper_details {
+  id              String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  cfp_id          String?          @db.Uuid
+  location        String?
+  country         String?
+  start_date      DateTime?        @db.Date
+  end_date        DateTime?        @db.Date
+  access_type     String?
+  status          Boolean?
+  call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_detail_of_cfp")
+}
+
+model call_for_papers {
+  id                     String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  conference_id          String?                  @db.Uuid
+  content                String?
+  link                   String?
+  avg_rating             Float?
+  owner                  String?
+  status                 String?
+  view_count             Decimal?                 @db.Decimal
+  call_for_paper_details call_for_paper_details[]
+  conferences            conferences?             @relation(fields: [conference_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_belong_conference")
+  important_dates        important_dates[]
+  rank_of_cfc            rank_of_cfc[]
+}
+
+model conference_rank_footprints {
+  id                  String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  conference_id       String?              @db.Uuid
+  rank_id             String?              @db.Uuid
+  year                Decimal?             @db.Decimal
+  conferences         conferences?         @relation(fields: [conference_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_conference_rank_footprints")
+  all_ranks_of_source all_ranks_of_source? @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_conference")
+}
+
+model conferences {
+  id                         String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                       String?
+  acronym                    String?
+  call_for_papers            call_for_papers[]
+  conference_rank_footprints conference_rank_footprints[]
+}
+
+model fields_of_research {
+  id   String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code String?
+  name String?
+}
+
+model important_dates {
+  id              String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  cfp_id          String?          @db.Uuid
+  date_type       String?
+  date_value      DateTime?        @db.Date
+  status          String?
+  call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_important_date_of_cfp")
+}
+
+model journal_rank_footprints {
+  id                  String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  journal_id          String?              @db.Uuid
+  rank_id             String?              @db.Uuid
+  year                Decimal?             @db.Decimal
+  journals            journals?            @relation(fields: [journal_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_journal_rank_footprints")
+  all_ranks_of_source all_ranks_of_source? @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_journal")
+}
+
+model journals {
+  id                      String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  country                 String?
+  name                    String?
+  issn                    String?
+  h_index                 Decimal?                  @db.Decimal
+  publisher               String?
+  scope                   String?
+  home_page               String?
+  email_submission        String?
+  journal_rank_footprints journal_rank_footprints[]
+}
+
+model rank_of_cfc {
+  id                  String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  rank_id             String?              @db.Uuid
+  cfc_id              String?              @db.Uuid
+  year                Decimal?             @db.Decimal
+  call_for_papers     call_for_papers?     @relation(fields: [cfc_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_has_rank")
+  all_ranks_of_source all_ranks_of_source? @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_cfc")
+}
+
+model sources {
+  id                  String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                String?
+  link                String?
+  all_ranks_of_source all_ranks_of_source[]
+}
