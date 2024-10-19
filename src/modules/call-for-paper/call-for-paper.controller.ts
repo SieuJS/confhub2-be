@@ -1,16 +1,12 @@
-import { Body, Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException} from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus,  Param,  Post, PreconditionFailedException} from '@nestjs/common';
 
-import { LoggerService} from '../common';
-import {Service} from '../tokens';
 import { CallForPaperService } from './call-for-paper.service';
-import { CallForPaperData, CallForPaperInput } from './model';
+import { CallForPaperData, CallForPaperInput, ImportantDateData } from './model';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('call-for-paper')
 export class CallForPaperController {
     public constructor (
-        @Inject(Service.CONFIG)
-        private readonly logger: LoggerService,
         private readonly callForPaperService: CallForPaperService 
     ){}
 
@@ -28,10 +24,32 @@ export class CallForPaperController {
         try
         {
             const callForPaper = await this.callForPaperService.create(input);
-            this.logger.info(`Created new call for papers with ID ${callForPaper.id}`);
             return callForPaper;
         }catch(error) {
-            this.logger.error(`Error in creating call for papers ${error}`);
+            // this.logger.error(`Error in creating call for papers ${error}`);
+            console.log(error);
+            throw new PreconditionFailedException('Some error occured when create call for papers');
+        }
+    }
+
+    @Get(':cfp_id/important-dates')
+    @ApiOperation({ summary: 'Find important dates of call for papers' })
+    @ApiResponse({ status: HttpStatus.OK, isArray: true, type: CallForPaperData })
+    public async getCFPImportantdates(@Param('cfp_id') cfp_id: string): Promise<ImportantDateData[]> {
+        return  this.callForPaperService.getCFPImportantdates(cfp_id);
+    }
+    
+    @Post(':cfp_id/important-dates')
+    @ApiOperation({ summary: 'Add important dates of call for papers' })
+    @ApiResponse({ status: HttpStatus.CREATED, type: ImportantDateData })
+    public async addCFPImportantdates(@Param('cfp_id') cfp_id: string, @Body() input: ImportantDateData): Promise<ImportantDateData> {
+        try
+        {
+            const importantDate = await this.callForPaperService.addCFPImportantdates(cfp_id, input);
+            return importantDate;
+        }catch(error) {
+            // this.logger.error(`Error in creating call for papers ${error}`);
+            console.log(error);
             throw new PreconditionFailedException('Some error occured when create call for papers');
         }
     }

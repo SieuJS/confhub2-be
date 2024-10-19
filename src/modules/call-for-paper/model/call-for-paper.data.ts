@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { call_for_papers as CallForPaper } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
+import { ImportantDateData } from "./";
 
 export class CallForPaperData {
     public static readonly DESCRIPTION_LENGTH = 1000;
@@ -16,11 +17,14 @@ export class CallForPaperData {
     @ApiProperty ({description : "Owner of call for paper", example: "John"})
     public readonly owner : string | null;
 
-    @ApiProperty ({description : "Status of call for paper", example: "true"})
+    @ApiProperty ({description : "Status of call for paper", example: "true" as string})
     public readonly status : string | null;
 
     @ApiProperty ({description : "Total view on this call for paper", example: "100"})
-    public readonly viewCount : Decimal | null;
+    public readonly view_count : Decimal | null;
+
+
+    public readonly importantDates : ImportantDateData | null;
 
     public constructor(entity: CallForPaper) {
         this.id = entity.id;
@@ -28,7 +32,8 @@ export class CallForPaperData {
         this.link = entity.link;
         this.owner = entity.owner;
         this.status = entity.status;
-        this.viewCount = entity.view_count;
+        this.view_count = entity.view_count;
+
     }
 
 }
