@@ -46,10 +46,18 @@ create table confhub.source_ranks (
     "value" numeric
 );
 
-create table confhub.fields_of_research (
+-- for: fields of research
+create table confhub.for_division (
     "id" uuid primary key default uuid_generate_v4(),
-    "code" text,
+    "code" varchar(2) UNIQUE,
     "name" text
+);
+
+create table confhub.for_group (
+    "id" uuid primary key default uuid_generate_v4(),
+    "code" varchar(4) UNIQUE,
+    "name" text,
+    "division_id" uuid
 );
 
 create table confhub.conferences (
@@ -102,9 +110,12 @@ alter table confhub.source_ranks add constraint fk_rank_of_source foreign key (s
 -- foreign keys for conference_rank_footprints table
 alter table confhub.conference_rank_footprints add constraint fk_conference_rank_footprints foreign key (conference_id) references confhub.conferences(id);
 alter table confhub.conference_rank_footprints add constraint fk_rank_of_conference foreign key (rank_id) references confhub.source_ranks(id);
-alter table confhub.conference_rank_footprints add constraint fk_conference_rank_footprints_for foreign key (for_id) references confhub.fields_of_research(id);
+alter table confhub.conference_rank_footprints add constraint fk_conference_rank_footprints_for foreign key (for_id) references confhub.for_group(id);
 
 -- foreign keys for journal_rank_footprints table
 alter table confhub.journal_rank_footprints add constraint fk_journal_rank_footprints foreign key (journal_id) references confhub.journals(id);
 alter table confhub.journal_rank_footprints add constraint fk_rank_of_journal foreign key (rank_id) references confhub.source_ranks(id);
-alter table confhub.journal_rank_footprints add constraint fk_journal_rank_footprints_for foreign key (for_id) references confhub.fields_of_research(id);
+alter table confhub.journal_rank_footprints add constraint fk_journal_rank_footprints_for foreign key (for_id) references confhub.for_group(id);
+
+-- foreign keys for for_group table
+alter table confhub.for_group add constraint fk_for_group_of_division foreign key (division_id) references confhub.for_division(id);
