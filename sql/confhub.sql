@@ -8,10 +8,10 @@ create table public.important_dates (
     "status" text
 );
 
-create table public.rank_of_cfc (
+create table public.rank_of_cfp (
     "id" uuid primary key default uuid_generate_v4(),
     "rank_id" uuid,
-    "cfc_id" uuid,
+    "cfp_id" uuid,
     "year" numeric
 );
 
@@ -97,9 +97,9 @@ alter table important_dates add constraint fk_important_date_of_cfp foreign key 
 -- foreign keys for call_for_papers table 
 alter table call_for_papers add constraint fk_cfp_belong_conference foreign key (conference_id) references conferences(id);
 
--- rank_of_cfc table foreign keys
-alter table rank_of_cfc add constraint fk_cfp_has_rank foreign key (cfc_id) references call_for_papers(id);
-alter table rank_of_cfc add constraint fk_rank_of_cfc foreign key (rank_id) references ranks_of_source(id);
+-- rank_of_cfp table foreign keys
+alter table rank_of_cfp add constraint fk_cfp_has_rank foreign key (cfp_id) references call_for_papers(id);
+alter table rank_of_cfp add constraint fk_rank_of_cfp foreign key (rank_id) references ranks_of_source(id);
 
 -- foreign keys for ranks_of_source table
 alter table ranks_of_source add constraint fk_rank_of_source foreign key (source_id) references sources(id);
