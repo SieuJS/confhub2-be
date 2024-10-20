@@ -52,15 +52,6 @@ model journals {
   journal_rank_footprints journal_rank_footprints[]
 }
 
-model rank_of_cfc {
-  id                  String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  rank_id             String?          @db.Uuid
-  cfc_id              String?          @db.Uuid
-  year                Decimal?         @db.Decimal
-  call_for_papers     call_for_papers? @relation(fields: [cfc_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_has_rank")
-  all_ranks_of_source ranks_of_source? @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_cfc")
-}
-
 model sources {
   id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name            String?
@@ -93,7 +84,7 @@ model call_for_papers {
   call_for_paper_details call_for_paper_details[]
   conferences            conferences?             @relation(fields: [conference_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_belong_conference")
   important_dates        important_dates[]
-  rank_of_cfc            rank_of_cfc[]
+  rank_of_cfp            rank_of_cfp[]
 }
 
 model conference_rank_footprints {
@@ -112,6 +103,15 @@ model ranks_of_source {
   value                      Decimal?                     @db.Decimal
   conference_rank_footprints conference_rank_footprints[]
   journal_rank_footprints    journal_rank_footprints[]
-  rank_of_cfc                rank_of_cfc[]
+  rank_of_cfp                rank_of_cfp[]
   sources                    sources?                     @relation(fields: [source_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_source")
+}
+
+model rank_of_cfp {
+  id              String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  rank_id         String?          @db.Uuid
+  cfp_id          String?          @db.Uuid
+  year            Decimal?         @db.Decimal
+  call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_has_rank")
+  ranks_of_source ranks_of_source? @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_cfp")
 }
