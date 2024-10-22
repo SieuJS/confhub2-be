@@ -3,6 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { important_dates as ImportantDate } from "@prisma/client";
 
 export class ImportantDateData {
+    
     @ApiProperty({ description: "Important date unique ID", example: "75442486-0878-440c-9db1-a7006c25a39f" })
     public id : string ;
     @ApiProperty({ description: "Important date type", example: "Abstract Submission" })

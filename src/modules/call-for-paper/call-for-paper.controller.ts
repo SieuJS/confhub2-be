@@ -1,5 +1,4 @@
 import { Body, Controller, Get, HttpStatus,  Param,  Post, PreconditionFailedException} from '@nestjs/common';
-
 import { CallForPaperService } from './call-for-paper.service';
 import { CallForPaperData, CallForPaperInput, ImportantDateData } from './model';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
