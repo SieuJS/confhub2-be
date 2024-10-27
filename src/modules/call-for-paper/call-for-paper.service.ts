@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common';
 import { CallForPaperData, CallForPaperInput, ImportantDateData, ImportantDateInput } from './model';
+import { PaginatorTypes, getPaginatedResult} from '@nodeteam/nestjs-prisma-pagination'; 
+
 
 @Injectable()
 export class CallForPaperService {
@@ -8,9 +10,13 @@ export class CallForPaperService {
         private readonly prismaService: PrismaService,
     ) {}
 
-    public async find(): Promise<CallForPaperData[]> {
+    public async find({where , orderBy, page , perPage} : {where? : string , orderBy? :  string, page? : number , perPage? : number}): Promise<PaginatorTypes.PaginatedResult<CallForPaperData>> {
         const callForPapers = await this.prismaService.call_for_papers.findMany({});
-        return callForPapers.map(callForPaper => new CallForPaperData(callForPaper));
+        return  getPaginatedResult({
+            data : callForPapers.map(callForPaper => new CallForPaperData(callForPaper)),
+            pagination :  { page : page || 1, perPage : perPage || 1 , skip : 0},
+            count : callForPapers.length 
+        });
     }
 
     public async create(data: CallForPaperInput): Promise<CallForPaperData> {

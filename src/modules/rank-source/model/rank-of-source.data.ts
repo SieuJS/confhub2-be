@@ -1,4 +1,4 @@
-import { ranks_of_source as RankOfSouce } from "@prisma/client";
+import { source_ranks as RankOfSouce } from "@prisma/client";
 
 import { ApiProperty } from "@nestjs/swagger";
 import { Decimal } from "@prisma/client/runtime/library";

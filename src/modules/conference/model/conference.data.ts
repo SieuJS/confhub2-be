@@ -8,14 +8,14 @@ export class ConferenceData {
     public readonly id: string;
 
     @ApiProperty({ description: "Conference name", example: "John" })
-    public readonly name: string | null;
+    public readonly name: string  | null;
 
     @ApiProperty({ description: "Conference acronym", example: "CITA" })
-    public readonly acronym: string | null;
+    public readonly acronym: string  | null;
 
     public constructor(entity: Conference) {
         this.id = entity.id;
-        this.name = entity.name;
-        this.acronym = entity.acronym;
+        this.name = entity.name as string;
+        this.acronym = entity.acronym as string;
     }
 }

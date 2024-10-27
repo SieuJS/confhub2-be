@@ -1,7 +1,10 @@
-import { Body, Controller, Get, HttpStatus,  Param,  Post, PreconditionFailedException} from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus,  Param,  Post, PreconditionFailedException, Query, ParseIntPipe, DefaultValuePipe} from '@nestjs/common';
 import { CallForPaperService } from './call-for-paper.service';
 import { CallForPaperData, CallForPaperInput, ImportantDateData } from './model';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { PaginatorTypes} from '@nodeteam/nestjs-prisma-pagination'; 
+
+
 
 @Controller('call-for-paper')
 export class CallForPaperController {
@@ -9,11 +12,14 @@ export class CallForPaperController {
         private readonly callForPaperService: CallForPaperService 
     ){}
 
-    @Get()
+    @Get('/')
     @ApiOperation({ summary: 'Find call for papers' })
-    @ApiResponse({ status: HttpStatus.OK, isArray: true, type: CallForPaperData })
-    public async find(): Promise<CallForPaperData[]> {
-        return this.callForPaperService.find();
+    @ApiResponse({ status: HttpStatus.OK, type: CallForPaperData }) 
+    public async find(
+        @Query('page',new DefaultValuePipe(1), ParseIntPipe) page : number,
+        @Query('perPage',new DefaultValuePipe(3), ParseIntPipe) perPage : number,
+    ): Promise<PaginatorTypes.PaginatedResult<CallForPaperData>> {
+        return this.callForPaperService.find({page, perPage});
     }
 
     @Post()

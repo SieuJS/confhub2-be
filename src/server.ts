@@ -4,8 +4,6 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 
-
-
 import { ApplicationModule } from './modules/app.module';
 import { CommonModule, LogInterceptor } from './modules/common';
 

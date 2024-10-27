@@ -18,7 +18,7 @@ export class CallForPaperData {
     public readonly owner : string | null;
 
     @ApiProperty ({description : "Status of call for paper", example: "true" as string})
-    public readonly status : string | null;
+    public readonly status : boolean | null;
 
     @ApiProperty ({description : "Total view on this call for paper", example: "100"})
     public readonly view_count : Decimal | null;

@@ -1,0 +1,8 @@
+
+
+
+export enum MongoService {
+    DATABASE_CONNECTION = 'DATABASE_CONNECTION',
+    JOB_TOKEN = 'JOB_MODEL',
+    CONFERENCE_TOKEN = 'CONFERENCE_MODEL',
+}

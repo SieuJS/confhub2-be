@@ -1,4 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS confhub;
+set schema 'confhub';
 create extension if not exists "uuid-ossp";
 
 create table confhub.important_dates (
@@ -94,6 +95,15 @@ create table confhub.conference_rank_footprints (
     "year" numeric
 );
 
+create table confhub.error_conferences(
+	"id" uuid primary key default uuid_generate_v4(),
+	"error_type" text, 
+	"error_message" text , 
+	"conference_id" uuid,
+	"created_at" timestamp, 
+	"updated_at" timestamp
+) 
+
 -- foreign keys for important_dates table
 alter table confhub.important_dates add constraint fk_important_date_of_cfp foreign key (cfp_id) references confhub.call_for_papers(id);
 
@@ -119,3 +129,43 @@ alter table confhub.journal_rank_footprints add constraint fk_journal_rank_footp
 
 -- foreign keys for for_group table
 alter table confhub.for_group add constraint fk_for_group_of_division foreign key (division_id) references confhub.for_division(id);
+
+
+--job management : 
+create table confhub.crawl_jobs (
+    "id" uuid primary key default uuid_generate_v4(),
+	"conference_id" text , 
+	"type" text , 
+	"progress_percent" int , 
+	"progress_detail" text ,
+	"duration" int,
+	"status" text,
+	"created_at" timestamp, 
+	"updated_at" timestamp
+);
+
+CREATE OR REPLACE FUNCTION notify_table_change()
+RETURNS trigger AS $$
+DECLARE
+    payload JSON;
+BEGIN
+    -- Construct payload based on the operation (INSERT, UPDATE, DELETE)
+    IF (TG_OP = 'INSERT') THEN
+        payload = json_build_object('operation', 'INSERT', 'data', row_to_json(NEW));
+    ELSIF (TG_OP = 'UPDATE') THEN
+        payload = json_build_object('operation', 'UPDATE', 'data', row_to_json(NEW));
+    ELSIF (TG_OP = 'DELETE') THEN
+        payload = json_build_object('operation', 'DELETE', 'data', row_to_json(OLD));
+    END IF;
+    
+    -- Send the notification to the specified channel
+    PERFORM pg_notify('table_change_channel', payload::text);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER table_change_trigger
+AFTER INSERT OR UPDATE OR DELETE
+ON crawl_jobs
+FOR EACH ROW
+EXECUTE FUNCTION notify_table_change();

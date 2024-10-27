@@ -17,3 +17,4 @@ export enum Role {
     RESTRICTED = 'restricted'
 
 }
+

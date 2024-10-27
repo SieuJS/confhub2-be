@@ -16,4 +16,10 @@ export interface Config {
 
     readonly CONFERENCES_ALLOWED: string;
 
+    readonly DB_USER  : string;
+    readonly DB_PASSWORD : string;
+    readonly DB_HOST : string;
+    readonly DB_PORT : number;
+    readonly DB_NAME : string;
+    readonly DB_SCHEMA : string;
 }
