@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-export const ConferenceSchema = new mongoose.Schema({
+export const ConferenceAdapterSchema = new mongoose.Schema({
     Title: {
         type: String,
         required: true

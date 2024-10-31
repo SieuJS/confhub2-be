@@ -8,10 +8,24 @@ export class ConferenceService {
         private readonly prismaService: PrismaService
     ) {}
 
-    public async find(): Promise<ConferenceData[]> {
-        const conferences = await this.prismaService.conferences.findMany({});
+    public async find(filter : ConferenceData ): Promise<ConferenceData[]> {
+        const conferences = await this.prismaService.conferences.findMany({
+            where : {
+                ...filter
+            }
+        });
 
         return conferences.map(conference => new ConferenceData(conference));
+    }
+
+    public async findOne(filter : ConferenceData): Promise<ConferenceData> {
+        const conference = await this.prismaService.conferences.findFirst({
+            where : {
+                ...filter
+            }
+        });
+
+        return new ConferenceData(conference as ConferenceData);
     }
 
     public async create(data: ConferenceInput): Promise<ConferenceData> {
@@ -21,7 +35,6 @@ export class ConferenceService {
 
         return new ConferenceData(conference);
     }
-
     
 
 }

@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
 import { JobService } from "./job.service";
 import { MongodbModule } from "../mongodb/mongodb.module";
-import { JobProviders } from "./job.provider";
+import { JobAdapterProviders } from "./job.provider";
 
 
 @Module({
     imports: [MongodbModule],
-    providers: [ ...JobProviders, JobService],
-    exports: [...JobProviders, JobService]
+    providers: [ ...JobAdapterProviders, JobService],
+    exports: [...JobAdapterProviders, JobService]
 })
 export class JobModule {}

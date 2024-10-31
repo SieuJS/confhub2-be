@@ -5,7 +5,7 @@ export interface JobProgress {
     detail: string;
 }
 
-export interface Job extends Document {
+export interface JobAdapter extends Document {
     readonly status: string; 
     readonly conf_id: string;
     readonly type: string;

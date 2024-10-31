@@ -1,6 +1,6 @@
-import {Job, JobProgress} from "./job.interface";
+import {JobAdapter as Job, JobProgress} from "./job-adapter.interface";
 import { ApiProperty } from "@nestjs/swagger";
-export class JobData {
+export class JobAdapterData {
     @ApiProperty({description: 'status of the job', example: 'running'})
     status: string;
     @ApiProperty({description: 'conference id', example: '5f7b7b7b7b7b7b7b7b7b7b7b'})

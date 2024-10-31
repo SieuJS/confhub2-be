@@ -8,7 +8,7 @@ datasource db {
 }
 
 model conferences {
-  id                         String                       @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id                         String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name                       String?
   acronym                    String?
   call_for_papers            call_for_papers[]
@@ -16,7 +16,7 @@ model conferences {
 }
 
 model important_dates {
-  id              String           @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id              String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   cfp_id          String?          @db.Uuid
   date_type       String?
   date_value      DateTime?        @db.Date
@@ -25,7 +25,7 @@ model important_dates {
 }
 
 model journal_rank_footprints {
-  id                  String        @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id                  String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   journal_id          String?       @db.Uuid
   rank_id             String?       @db.Uuid
   for_id              String?       @db.Uuid
@@ -36,7 +36,7 @@ model journal_rank_footprints {
 }
 
 model journals {
-  id                      String                    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id                      String                    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   country                 String?
   name                    String?
   issn                    String?
@@ -49,14 +49,14 @@ model journals {
 }
 
 model sources {
-  id           String         @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name         String?
   link         String?
   source_ranks source_ranks[]
 }
 
 model call_for_papers {
-  id              String            @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   conference_id   String?           @db.Uuid
   content         String?
   link            String?
@@ -75,7 +75,7 @@ model call_for_papers {
 }
 
 model conference_rank_footprints {
-  id              String        @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   conference_id   String?       @db.Uuid
   rank_id         String?       @db.Uuid
   for_id          String?       @db.Uuid
@@ -86,7 +86,7 @@ model conference_rank_footprints {
 }
 
 model rank_of_cfp {
-  id              String           @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id              String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   rank_id         String?          @db.Uuid
   cfp_id          String?          @db.Uuid
   year            Decimal?         @db.Decimal
@@ -95,14 +95,14 @@ model rank_of_cfp {
 }
 
 model for_division {
-  id        String      @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id        String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   code      String?     @unique @db.VarChar(2)
   name      String?
   for_group for_group[]
 }
 
 model for_group {
-  id                         String                       @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id                         String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   code                       String?                      @unique @db.VarChar(4)
   name                       String?
   division_id                String?                      @db.Uuid
@@ -112,7 +112,7 @@ model for_group {
 }
 
 model source_ranks {
-  id                         String                       @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id                         String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   source_id                  String?                      @db.Uuid
   rank                       String?
   value                      Decimal?                     @db.Decimal
@@ -123,7 +123,7 @@ model source_ranks {
 }
 
 model crawl_jobs {
-  id               String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   conference_id    String?
   type             String?
   progress_percent Int?
@@ -135,7 +135,7 @@ model crawl_jobs {
 }
 
 model error_conferences {
-  id            String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   error_type    String?
   error_message String?
   conference_id String?   @db.Uuid

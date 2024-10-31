@@ -21,7 +21,7 @@ export class ConferenceController {
     @ApiOperation({ summary: 'Find conferences' })
     @ApiResponse({ status: HttpStatus.OK, isArray: true, type: ConferenceData })
     public async find(): Promise<ConferenceData[]> {
-        return this.conferenceService.find();
+        return this.conferenceService.find({} as ConferenceData);
     }
 
     @Post()

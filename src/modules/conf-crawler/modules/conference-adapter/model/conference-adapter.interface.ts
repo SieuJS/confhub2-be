@@ -1,5 +1,5 @@
 import { Document } from "mongoose";
-export interface Conference extends Document {
+export interface ConferenceAdapter extends Document {
     Title: string;
     Acronym: string;
     Source: string;

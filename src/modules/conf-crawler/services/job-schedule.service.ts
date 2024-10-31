@@ -11,6 +11,7 @@ export class JobScheduleService {
     async handleCron() {
         console.log('Called when the current second is 10');
         console.log('JobService', this.jobService);
+        
         await this.jobService.findAll();
     }
     

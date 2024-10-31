@@ -1,7 +1,7 @@
-import {Conference} from './conference.interface';
+import {ConferenceAdapter as Conference} from './conference-adapter.interface';
 import { ApiProperty } from "@nestjs/swagger";
 
-export class ConferenceData {
+export class ConferenceAdapterData {
     @ApiProperty({description: 'name of the conference', example: 'ICSE 2021'})
     Title: string;
     @ApiProperty({description: 'acronym of the conference', example: 'ICSE'})
