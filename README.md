@@ -8,7 +8,7 @@ Confhub2-be kế thừa confhub-be viết bằng framework nestjs
 
 1. **Cài đặt các gói npm:**
 
-   Chạy lệnh sau để cài đặt tất cả các gói cần thiết:
+Chạy lệnh sau để cài đặt tất cả các gói cần thiết:
 
 ```bash
 npm install
@@ -16,7 +16,7 @@ npm install
 
 2. **Cấu hình tệp môi trường:**
 
-   Sao chép tệp `.env.example` thành `.env`:
+Sao chép tệp `.env.example` thành `.env`:
 
 ```bash
 cp .env.example .env
@@ -39,7 +39,7 @@ Mở Query Tool trong database confhub-development và chạy câu lệnh sau:
 
 3. **Đẩy cấu trúc cơ sở dữ liệu với Prisma:**
 
-   Chạy lệnh sau để đẩy cấu trúc cơ sở dữ liệu theo các mô hình đã được định nghĩa trong Prisma:
+Chạy lệnh sau để đẩy cấu trúc cơ sở dữ liệu theo các mô hình đã được định nghĩa trong Prisma:
 
 ```bash
 npx prisma db push
@@ -47,7 +47,7 @@ npx prisma db push
 
 4. **Chạy ứng dụng:**
 
-   Chạy ứng dụng trong môi trường phát triển
+Chạy ứng dụng trong môi trường phát triển
 
 ```bash
 npm run dev
