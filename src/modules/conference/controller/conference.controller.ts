@@ -7,6 +7,7 @@ import { ConferencePipe } from '../flow/conference.pipe';
 import { ConferenceData, ConferenceInput } from '../model';
 import { ConferenceService } from '../service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PagingResponse } from '../../common';
 
 @Controller('conference')
 @ApiTags('Conference')
@@ -22,6 +23,7 @@ export class ConferenceController {
     @ApiOperation({ summary: 'Find conferences' })
     @ApiResponse({ status: HttpStatus.OK, isArray: true, type: ConferenceData })
     public async find(): Promise<ConferenceData[]> {
+
         return this.conferenceService.find({} as ConferenceData);
     }
 
