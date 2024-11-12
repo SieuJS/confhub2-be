@@ -5,13 +5,13 @@ import { ConferenceAdapterInput } from "../modules";
 export class ConferenceAdapterPipe implements PipeTransform {
     transform(value: any, metadata: ArgumentMetadata) : ConferenceAdapterInput {
         if(value.title){
-            return new ConferenceAdapterInput({
+            return {
                 Title : value.title,
                 Acronym : value.acronym,
                 Rank : value.rank,
                 Source : value.source,
                 PrimaryFoR : value.primaryFoR, 
-            })
+            } as ConferenceAdapterInput;
         }
         return value;
 
