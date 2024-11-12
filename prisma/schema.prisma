@@ -103,7 +103,7 @@ model for_division {
 
 model for_group {
   id                         String                       @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
-  code                       String?                      @unique @db.VarChar(4)
+  code                       String?                      @unique @db.VarChar(8)
   name                       String?
   division_id                String?                      @db.Uuid
   conference_rank_footprints conference_rank_footprints[]

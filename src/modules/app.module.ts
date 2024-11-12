@@ -10,6 +10,7 @@ import { JournalModule } from './journal/journal.module';
 import { JobModule } from './job/job.module';
 import { CrawlPipeLineModule } from './crawl-pipe-line';
 import { PrismaService } from './common';
+import { FieldOfResearchModule } from './field-of-research/field-of-research.module';
 
 
 
@@ -37,6 +38,7 @@ import { PrismaService } from './common';
         JournalModule,
         JobModule,
         CrawlPipeLineModule,
+        FieldOfResearchModule,
     ],
 })
 export class ApplicationModule {}

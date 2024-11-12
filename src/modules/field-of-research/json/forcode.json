@@ -1,0 +1,438 @@
+[
+  {
+    "code": "CSE",
+    "for": "Computer Systems Engineering"
+  },
+  {
+    "code": 46,
+    "for": "Information and Computing Sciences"
+  },
+  {
+    "code": 4601,
+    "for": "Applied computing"
+  },
+  {
+    "code": 4602,
+    "for": "Artificial intelligence"
+  },
+  {
+    "code": 4603,
+    "for": "Computer vision and multimedia computation"
+  },
+  {
+    "code": 4604,
+    "for": "Cybersecurity and privacy"
+  },
+  {
+    "code": 4605,
+    "for": "Data management and data science"
+  },
+  {
+    "code": 4606,
+    "for": "Distributed computing and systems software"
+  },
+  {
+    "code": 4607,
+    "for": "Graphics, augmented reality and games"
+  },
+  {
+    "code": 4608,
+    "for": "Human-centred computing"
+  },
+  {
+    "code": 4611,
+    "for": "Machine learning"
+  },
+  {
+    "code": 4612,
+    "for": "Software engineering"
+  },
+  {
+    "code": 4613,
+    "for": "Theory of computation"
+  },
+  {
+    "code": 461303,
+    "for": "Computational logic and formal languages"
+  },
+  {
+    "code": 461304,
+    "for": "Concurrency theory"
+  },
+  {
+    "code": 461305,
+    "for": "Data structures and algorithms"
+  },
+  {
+    "code": 461306,
+    "for": "Numerical computation and mathematical software"
+  },
+  {
+    "code": 461307,
+    "for": "Quantum computation"
+  },
+  {
+    "code": 460101,
+    "for": "Applications in arts and humanities"
+  },
+  {
+    "code": 460102,
+    "for": "Applications in health"
+  },
+  {
+    "code": 460103,
+    "for": "Applications in life sciences"
+  },
+  {
+    "code": 460104,
+    "for": "Applications in physical sciences"
+  },
+  {
+    "code": 460105,
+    "for": "Applications in social sciences and education"
+  },
+  {
+    "code": 460106,
+    "for": "Spatial data and applications"
+  },
+  {
+    "code": 460201,
+    "for": "Artificial life and complex adaptive systems"
+  },
+  {
+    "code": 460202,
+    "for": "Autonomous agents and multiagent systems"
+  },
+  {
+    "code": 460203,
+    "for": "Evolutionary computation"
+  },
+  {
+    "code": 460204,
+    "for": "Fuzzy computation"
+  },
+  {
+    "code": 460205,
+    "for": "Intelligent robotics"
+  },
+  {
+    "code": 460206,
+    "for": "Knowledge representation and reasoning"
+  },
+  {
+    "code": 460207,
+    "for": "Modelling and simulation"
+  },
+  {
+    "code": 460208,
+    "for": "Natural language processing"
+  },
+  {
+    "code": 460209,
+    "for": "Planning and decision making"
+  },
+  {
+    "code": 460210,
+    "for": "Satisfiability and optimisation"
+  },
+  {
+    "code": 460211,
+    "for": "Speech production"
+  },
+  {
+    "code": 460212,
+    "for": "Speech recognition"
+  },
+  {
+    "code": 460301,
+    "for": "Active sensing"
+  },
+  {
+    "code": 460302,
+    "for": "Audio processing"
+  },
+  {
+    "code": 460303,
+    "for": "Computational imaging"
+  },
+  {
+    "code": 460304,
+    "for": "Computer vision"
+  },
+  {
+    "code": 460305,
+    "for": "Image and video coding"
+  },
+  {
+    "code": 460306,
+    "for": "Image processing"
+  },
+  {
+    "code": 460307,
+    "for": "Multimodal analysis and synthesis"
+  },
+  {
+    "code": 460308,
+    "for": "Pattern recognition"
+  },
+  {
+    "code": 460309,
+    "for": "Video processing"
+  },
+  {
+    "code": 460401,
+    "for": "Cryptography"
+  },
+  {
+    "code": 460402,
+    "for": "Data and information privacy"
+  },
+  {
+    "code": 460403,
+    "for": "Data security and protection"
+  },
+  {
+    "code": 460404,
+    "for": "Digital forensics"
+  },
+  {
+    "code": 460405,
+    "for": "Hardware security"
+  },
+  {
+    "code": 460406,
+    "for": "Software and application security"
+  },
+  {
+    "code": 460407,
+    "for": "System and network security"
+  },
+  {
+    "code": 460501,
+    "for": "Data engineering and data science"
+  },
+  {
+    "code": 460502,
+    "for": "Data mining and knowledge discovery"
+  },
+  {
+    "code": 460503,
+    "for": "Data models, storage and indexing"
+  },
+  {
+    "code": 460504,
+    "for": "Data quality"
+  },
+  {
+    "code": 460505,
+    "for": "Database systems"
+  },
+  {
+    "code": 460506,
+    "for": "Graph, social and multimedia data"
+  },
+  {
+    "code": 460507,
+    "for": "Information extraction and fusion"
+  },
+  {
+    "code": 460508,
+    "for": "Information retrieval and web search"
+  },
+  {
+    "code": 460509,
+    "for": "Query processing and optimisation"
+  },
+  {
+    "code": 460510,
+    "for": "Recommender systems"
+  },
+  {
+    "code": 460511,
+    "for": "Stream and sensor data"
+  },
+  {
+    "code": 460601,
+    "for": "Cloud computing"
+  },
+  {
+    "code": 460602,
+    "for": "Concurrent/parallel systems and technologies"
+  },
+  {
+    "code": 460603,
+    "for": "Cyberphysical systems and internet of things"
+  },
+  {
+    "code": 460604,
+    "for": "Dependable systems"
+  },
+  {
+    "code": 460605,
+    "for": "Distributed systems and algorithms"
+  },
+  {
+    "code": 460606,
+    "for": "Energy-efficient computing"
+  },
+  {
+    "code": 460607,
+    "for": "High performance computing"
+  },
+  {
+    "code": 460608,
+    "for": "Mobile computing"
+  },
+  {
+    "code": 460609,
+    "for": "Networking and communications"
+  },
+  {
+    "code": 460610,
+    "for": "Operating systems"
+  },
+  {
+    "code": 460611,
+    "for": "Performance evaluation"
+  },
+  {
+    "code": 460612,
+    "for": "Service oriented computing"
+  },
+  {
+    "code": 460701,
+    "for": "Computer aided design"
+  },
+  {
+    "code": 460702,
+    "for": "Computer graphics"
+  },
+  {
+    "code": 460703,
+    "for": "Entertainment and gaming"
+  },
+  {
+    "code": 460704,
+    "for": "Interactive narrative"
+  },
+  {
+    "code": 460705,
+    "for": "Procedural content generation"
+  },
+  {
+    "code": 460706,
+    "for": "Serious games"
+  },
+  {
+    "code": 460707,
+    "for": "Sound and music computing"
+  },
+  {
+    "code": 460708,
+    "for": "Virtual and mixed reality"
+  },
+  {
+    "code": 460801,
+    "for": "Accessible computing"
+  },
+  {
+    "code": 460802,
+    "for": "Affective computing"
+  },
+  {
+    "code": 460803,
+    "for": "Collaborative and social computing"
+  },
+  {
+    "code": 460804,
+    "for": "Computing education"
+  },
+  {
+    "code": 460805,
+    "for": "Fairness, accountability, transparency, trust and ethics of computer systems"
+  },
+  {
+    "code": 460806,
+    "for": "Human-computer interaction"
+  },
+  {
+    "code": 460807,
+    "for": "Information visualisation"
+  },
+  {
+    "code": 460808,
+    "for": "Mixed initiative and human-in-the-loop"
+  },
+  {
+    "code": 460809,
+    "for": "Pervasive computing"
+  },
+  {
+    "code": 460810,
+    "for": "Social robotics"
+  },
+  {
+    "code": 461101,
+    "for": "Adversarial machine learning"
+  },
+  {
+    "code": 461102,
+    "for": "Context learning"
+  },
+  {
+    "code": 461103,
+    "for": "Deep learning"
+  },
+  {
+    "code": 461104,
+    "for": "Neural networks"
+  },
+  {
+    "code": 461105,
+    "for": "Reinforcement learning"
+  },
+  {
+    "code": 461106,
+    "for": "Semi- and unsupervised learning"
+  },
+  {
+    "code": 461201,
+    "for": "Automated software engineering"
+  },
+  {
+    "code": 461202,
+    "for": "Empirical software engineering"
+  },
+  {
+    "code": 461203,
+    "for": "Formal methods for software"
+  },
+  {
+    "code": 461204,
+    "for": "Programming languages"
+  },
+  {
+    "code": 461205,
+    "for": "Requirements engineering"
+  },
+  {
+    "code": 461206,
+    "for": "Software architecture"
+  },
+  {
+    "code": 461207,
+    "for": "Software quality, processes and metrics"
+  },
+  {
+    "code": 461208,
+    "for": "Software testing, verification and validation"
+  },
+  {
+    "code": 461301,
+    "for": "Coding, information theory and compression"
+  },
+  {
+    "code": 461302,
+    "for": "Computational complexity and computability"
+  }
+]

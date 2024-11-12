@@ -22,4 +22,6 @@ export interface Config {
     readonly DB_PORT : number;
     readonly DB_NAME : string;
     readonly DB_SCHEMA : string;
+
+    readonly FOR_READY : Boolean;
 }

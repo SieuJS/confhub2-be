@@ -22,7 +22,7 @@ export const configProvider = {
             DB_HOST: Joi.string().required(),
             DB_PORT: Joi.number().required(),
             DB_NAME: Joi.string().required(),
-
+            FOR_READY : Joi.boolean().required()
         });
 
 
