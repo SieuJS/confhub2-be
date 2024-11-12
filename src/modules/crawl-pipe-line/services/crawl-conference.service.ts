@@ -6,6 +6,7 @@ import {  ConferenceAdapterService, ConferenceAdapterData, ConferenceAdapterInpu
 export class CrawlConferenceService {
     constructor (
         private readonly conferenceAdapterService: ConferenceAdapterService,
+
     ){
 
     }

@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common';
-import { ConferenceData, ConferenceInput } from '../model';
-
+import { ConferenceData, ConferenceInput, ConferenceRankFootPrintsData } from '../model';
+import {TransactionHost} from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 @Injectable()
 export class ConferenceService {
     public constructor(
-        private readonly prismaService: PrismaService
+        private readonly prismaService: PrismaService,
+        private readonly txHost: TransactionHost<TransactionalAdapterPrisma>
     ) {}
 
     public async find(filter : ConferenceData ): Promise<ConferenceData[]> {
@@ -28,13 +30,45 @@ export class ConferenceService {
         return new ConferenceData(conference as ConferenceData);
     }
 
-    public async create(data: ConferenceInput): Promise<ConferenceData> {
-        const conference = await this.prismaService.conferences.create({
-            data
+    public async findManyWithRankFootprints(filter: ConferenceData): Promise<
+    (ConferenceData & { rank_foot_prints: ConferenceRankFootPrintsData[] })[]> {
+        const conferences = await this.prismaService.conferences.findMany({
+            where: filter,
+            include: {
+                conference_rank_footprints: true
+            }
         });
 
-        return new ConferenceData(conference);
+        return conferences.map(conference => {
+            let rank_foot_prints: ConferenceRankFootPrintsData[] = conference.conference_rank_footprints.map(footprint => new ConferenceRankFootPrintsData(footprint));
+            return {
+                ...new ConferenceData(conference),
+                rank_foot_prints
+            };
+        });
     }
-    
+
+    public async findOneWithRankFootprints(filter: ConferenceData): Promise<ConferenceData & { rank_foot_prints: ConferenceRankFootPrintsData[] }> {
+        const conference = await this.prismaService.conferences.findFirst({
+            where: filter,
+            include: {
+                conference_rank_footprints: true
+            }
+        });
+
+        if(!conference) {
+            return null as any;
+        }
+
+        let rank_foot_prints: ConferenceRankFootPrintsData[] = conference?.conference_rank_footprints.map(footprint => new ConferenceRankFootPrintsData(footprint)) as ConferenceRankFootPrintsData[];
+        return {
+            ...new ConferenceData(conference as ConferenceData),
+            rank_foot_prints
+        };
+    }
+
+    public async create(data: ConferenceInput): Promise<ConferenceData> {
+        return this.txHost.tx.conferences.create({data});
+    }
 
 }

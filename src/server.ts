@@ -57,6 +57,7 @@ async function bootstrap(): Promise<void> {
         ApplicationModule,
         new FastifyAdapter()
     );
+    app.enableCors();
 
     // @todo Enable Helmet for better API security headers
 

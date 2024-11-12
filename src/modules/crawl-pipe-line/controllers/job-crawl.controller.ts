@@ -1,11 +1,11 @@
 import { Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import {JobService, JobAdapterData , JobInput} from '../modules';
+import { JobAdapterData , JobAdapterInput, JobAdapterService} from '../modules';
 
 @Controller('conf-crawler/job')
-export class JobController {
+export class JobCrawlController {
     constructor(    
-        private readonly jobService: JobService
+        private readonly jobService: JobAdapterService
     ) {}
     @Get()
     @ApiOperation({ summary: 'Get all jobs' })
@@ -17,7 +17,7 @@ export class JobController {
     @ApiOperation({ summary: 'Create job' })
     @ApiResponse({status : HttpStatus.CREATED, type: JobAdapterData})
 
-    async create(input: JobInput): Promise<JobAdapterData> {
+    async create(input: JobAdapterInput): Promise<JobAdapterData> {
         return await this.jobService.create(input);
     }
 }

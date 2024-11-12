@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { JobService } from "../modules";
+import { JobAdapterService } from "../modules";
 import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class JobScheduleService {
-    constructor( private jobService: JobService) {
+    constructor( private jobService: JobAdapterService) {
         this.jobService = jobService
     }
     @Cron('10 * * * * *')
