@@ -1,4 +1,10 @@
 import { Module } from '@nestjs/common';
 
 @Module({})
-export class FieldOfResearchModule {}
+export class FieldOfResearchModule {
+    constructor(
+
+    ) {
+
+    }
+}
