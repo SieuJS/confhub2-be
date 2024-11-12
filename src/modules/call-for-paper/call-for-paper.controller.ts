@@ -1,12 +1,13 @@
 import { Body, Controller, Get, HttpStatus,  Param,  Post, PreconditionFailedException, Query, ParseIntPipe, DefaultValuePipe} from '@nestjs/common';
 import { CallForPaperService } from './call-for-paper.service';
 import { CallForPaperData, CallForPaperInput, ImportantDateData } from './model';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaginatorTypes} from '@nodeteam/nestjs-prisma-pagination'; 
 
 
 
 @Controller('call-for-paper')
+@ApiTags('Call For Paper')
 export class CallForPaperController {
     public constructor (
         private readonly callForPaperService: CallForPaperService 

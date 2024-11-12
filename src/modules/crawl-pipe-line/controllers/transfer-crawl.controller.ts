@@ -1,6 +1,6 @@
 import { ConferenceAdapterService, ConferenceAdapterData, ConferenceAdapterInput, JobAdapterInput } from "../modules";
 import { Controller, HttpStatus , Get, Post, Body} from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {ConferenceService, ConferenceData} from "../../conference"
 import { SourceService, RankService } from "../../rank-source";
 import { SourceData, SourceInput, SourceRanksInput, SourceRanksData } from "../../rank-source/model";
@@ -14,6 +14,7 @@ class ResponseMessage {
 }
 
 @Controller('/pipe-line/transfer')
+@ApiTags('Crawl Pipeline')
 export class ConferenceCrawlController {
     constructor(
         private readonly conferenceAdapterService: ConferenceAdapterService,

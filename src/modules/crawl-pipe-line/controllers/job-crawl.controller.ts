@@ -1,8 +1,9 @@
 import { Controller, Get, HttpStatus, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JobAdapterData , JobAdapterInput, JobAdapterService} from '../modules';
 
 @Controller('conf-crawler/job')
+@ApiTags('Crawl Pipeline')
 export class JobCrawlController {
     constructor(    
         private readonly jobService: JobAdapterService

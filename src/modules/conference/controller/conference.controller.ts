@@ -6,9 +6,10 @@ import {Service} from '../../tokens';
 import { ConferencePipe } from '../flow/conference.pipe';
 import { ConferenceData, ConferenceInput } from '../model';
 import { ConferenceService } from '../service';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('conference')
+@ApiTags('Conference')
 export class ConferenceController {
     public constructor (
         @Inject(Service.CONFIG)
