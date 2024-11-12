@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class ConferenceAdapterData {
     @ApiProperty ({description: 'id of the conference', example: '5f7b7b7b7b7b7b7b7b7b7b7b'})
-    Id: string;
+    _id: string;
     @ApiProperty({description: 'name of the conference', example: 'ICSE 2021'})
     Title: string;
     @ApiProperty({description: 'acronym of the conference', example: 'ICSE'})
@@ -44,7 +44,7 @@ export class ConferenceAdapterData {
     updatedAt: Date;
     
     constructor(conference: Conference) {
-        this.Id = conference._id as string;
+        this._id = conference._id as string;
         this.Title = conference.Title;
         this.Acronym = conference.Acronym;
         this.Source = conference.Source;

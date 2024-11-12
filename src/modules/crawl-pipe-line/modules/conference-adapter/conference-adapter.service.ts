@@ -11,7 +11,8 @@ export class ConferenceAdapterService {
     ){}
 
     async create(conference: ConferenceAdapterInput): Promise<ConferenceAdapterData> {
-        return new ConferenceAdapterData(await this.conferenceModel.create(conference));
+        const conferenceAdapter = await this.conferenceModel.create(conference)
+        return new ConferenceAdapterData(conferenceAdapter); ;
     }
 
     async findAll(): Promise<ConferenceAdapterData[]> {

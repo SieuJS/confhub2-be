@@ -14,7 +14,7 @@
     "dev": "env-cmd -f .env nodemon",
     "build": "npm run clean && tsc",
     "test": "env-cmd -f .env jest --config=jest.json",
-    "lint": "eslint -c .eslintrc.js --ext .ts 'src/**/*.ts'"
+    "lint": "eslint -c .eslintrc.js --ext .ts \"src/**/*.ts\""
   },
   "dependencies": {
     "@fastify/helmet": "^11.1.1",

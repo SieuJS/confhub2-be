@@ -11,7 +11,7 @@ export class JobAdapterService {
     ){};
 
     async create(@Body() job: JobAdapterInput): Promise<JobAdapterData> {
-        return await this.jobModel.create(job);
+        return new JobAdapterData(await this.jobModel.create(job)) ;
     }
 
     async findAll(): Promise<JobAdapterData[]> {

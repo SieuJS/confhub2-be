@@ -1,4 +1,4 @@
-import { ConferenceAdapterService, ConferenceAdapterData, ConferenceAdapterInput, JobAdapterInput } from "../modules";
+import { ConferenceAdapterService, ConferenceAdapterData, ConferenceAdapterInput, JobAdapterInput, JobAdapterData } from "../modules";
 import { Controller, HttpStatus , Get, Post, Body} from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {ConferenceService, ConferenceData} from "../../conference"
@@ -10,7 +10,12 @@ import { ConferenceAdapterPipe } from "../pipes/conference-adapter.pipe";
 
 import { JobAdapterService} from "../modules";
 class ResponseMessage {
-    message : string ;
+    constructor (
+        public message : string,
+        public newMongoInstance : boolean = false,
+        public crawlJob : string = '',
+        public newPgInstance : boolean = false,
+    ){}
 }
 
 @Controller('/pipe-line/transfer')
@@ -94,14 +99,20 @@ export class ConferenceCrawlController {
         // if exists conference, 
         if(newConferenceAdapter) {
             newJob = await this.jobAdapterService.create({
-                conf_id : newConferenceAdapter.Id,
+                conf_id : newConferenceAdapter._id,
                 type : 'import conference',
                 status : 'pending',
-            } as JobAdapterInput);
+            } as JobAdapterInput) as JobAdapterData;
         }
 
         if (newJob) {
-            return {message : 'Import conference success'};
+            return {
+                message : 'mode 2',
+                newMongoInstance: false,
+                crawlJob: newJob._id,
+                newPgInstance: true,
+                cfp_id: newConferenceAdapter?._id ,
+            } as ResponseMessage;
         }
         return {message : 'Nothing change'};
     }
