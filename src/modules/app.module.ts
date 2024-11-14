@@ -12,8 +12,6 @@ import { CrawlPipeLineModule } from './crawl-pipe-line';
 import { PrismaService } from './common';
 import { FieldOfResearchModule } from './field-of-research/field-of-research.module';
 
-
-
 @Module({
     imports: [
         ClsModule.forRoot({

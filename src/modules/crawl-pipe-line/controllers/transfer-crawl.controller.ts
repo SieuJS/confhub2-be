@@ -1,7 +1,7 @@
 import { ConferenceAdapterService, ConferenceAdapterData, ConferenceAdapterInput, JobAdapterInput, JobAdapterData } from "../modules";
 import { Controller, HttpStatus , Get, Post, Body} from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import {ConferenceService, ConferenceData} from "../../conference"
+import {ConferenceService, ConferenceData, ConferenceRankFootPrintsInput} from "../../conference"
 import { SourceService, RankService } from "../../rank-source";
 import { SourceData, SourceInput, SourceRanksInput, SourceRanksData } from "../../rank-source/model";
 import { Decimal } from "@prisma/client/runtime/library";
@@ -9,6 +9,7 @@ import {Transactional} from "@nestjs-cls/transactional";
 import { ConferenceAdapterPipe } from "../pipes/conference-adapter.pipe";
 
 import { JobAdapterService} from "../modules";
+import { ConferenceRankFootPrintsService } from "../../conference/service/conference-rank-footprints.service";
 class ResponseMessage {
     constructor (
         public message : string,
@@ -27,6 +28,7 @@ export class ConferenceCrawlController {
         private readonly sourceService: SourceService,
         private readonly rankService: RankService,
         private readonly jobAdapterService : JobAdapterService,
+        private readonly conferenceRankFootPrintService : ConferenceRankFootPrintsService,
     ){}
 
     @Get()
@@ -49,71 +51,8 @@ export class ConferenceCrawlController {
     @ApiResponse({ status: HttpStatus.CREATED, type: ResponseMessage })
     public async importConference(@Body(ConferenceAdapterPipe) input :ConferenceAdapterInput ): Promise<{message : string}> {
         // check for exists conference in the database;
-        let newConference;
-        let newSourceRank;
-        let newSource; 
-        let newJob ;
-        let newConferenceAdapter; 
-        let existsSourceRank ;
-        let existsSource;
-        let existsConferences = await this.conferenceService.findOneWithRankFootprints({
-            acronym : input.Acronym, 
-            name : input.Title,
-        } as ConferenceData);
+        
 
-
-        if (!existsConferences){
-            newConference = await this.conferenceService.create({
-                acronym : input.Acronym,
-                name : input.Title,
-            } as ConferenceData);
-        }
-
-        existsSource = await this.sourceService.findOne({
-            name : input.Source
-        } as SourceData);
-
-        if(!existsSource) {
-            newSource = await this.sourceService.create({name : input.Source} as SourceInput) as SourceData;
-            existsSource = newSource;
-        }
-        else {
-            existsSourceRank = await this.rankService.findRankOfSource({
-                source_id : existsSource.id,
-                rank : input.Rank,
-            } as SourceRanksData);
-        }
-
-        if(!existsSourceRank) {
-            newSourceRank = 
-            await this.rankService.createRankOfSource(
-                {source_id : existsSource.id, rank : input.Rank, value : new Decimal(0) } as SourceRanksInput
-            );
-        }
-
-        if(newConference || newSourceRank || newSource) {
-            newConferenceAdapter = await this.conferenceAdapterService.create(input);
-        }
-
-        // if exists confernce , not have source , mode 1 
-        // if exists conference, 
-        if(newConferenceAdapter) {
-            newJob = await this.jobAdapterService.create({
-                conf_id : newConferenceAdapter._id,
-                type : 'import conference',
-                status : 'pending',
-            } as JobAdapterInput) as JobAdapterData;
-        }
-
-        if (newJob) {
-            return {
-                message : 'mode 2',
-                newMongoInstance: false,
-                crawlJob: newJob._id,
-                newPgInstance: true,
-                cfp_id: newConferenceAdapter?._id ,
-            } as ResponseMessage;
-        }
         return {message : 'Nothing change'};
     }
 }

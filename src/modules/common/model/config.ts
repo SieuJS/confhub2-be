@@ -23,5 +23,5 @@ export interface Config {
     readonly DB_NAME : string;
     readonly DB_SCHEMA : string;
 
-    readonly FOR_READY : Boolean;
+    readonly FIELD_CODE_LOADED : string;
 }

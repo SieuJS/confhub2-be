@@ -9,9 +9,9 @@ datasource db {
 
 model conferences {
   id                         String                       @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
-  name                       String?
-  acronym                    String?
-  call_for_papers            call_for_papers[]
+  name                       String? 
+  acronym                    String? @unique
+  call_for_papers            call_for_papers[] 
   conference_rank_footprints conference_rank_footprints[]
 }
 
@@ -50,7 +50,7 @@ model journals {
 
 model sources {
   id           String         @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
-  name         String?
+  name         String? @unique
   link         String?
   source_ranks source_ranks[]
 }
@@ -120,6 +120,7 @@ model source_ranks {
   journal_rank_footprints    journal_rank_footprints[]
   rank_of_cfp                rank_of_cfp[]
   sources                    sources?                     @relation(fields: [source_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_source")
+  @@unique([source_id, rank])
 }
 
 model crawl_jobs {

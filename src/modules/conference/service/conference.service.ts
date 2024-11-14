@@ -71,4 +71,6 @@ export class ConferenceService {
         return this.txHost.tx.conferences.create({data});
     }
 
+
+
 }

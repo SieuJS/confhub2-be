@@ -4,17 +4,17 @@ import * as path from 'path'
 import { Injectable, Inject } from "@nestjs/common";
 import { Service } from "../../tokens";
 import { Config } from "../model";
-import { cwd } from 'process';
-
 @Injectable()
 export class ConfigService {
     constructor (
         @Inject(Service.CONFIG)
         public readonly config: Config
-    ){}
-    changeFOR_READY(value: boolean): void {
-        const key = 'FOR_READY'
-        const environment_path = path.join(cwd.toString(), '/.env')
+    ){
+
+    }
+    changeFIELD_CODE_LOADED(value: string): void {
+        const key = 'FIELD_CODE_LOADED'
+        const environment_path = path.join(__dirname, '../../../../.env')
         const ENV_VARS = fs.readFileSync(environment_path, 'utf8').split(os.EOL)
     
         const line = ENV_VARS.find((line: string) => {
