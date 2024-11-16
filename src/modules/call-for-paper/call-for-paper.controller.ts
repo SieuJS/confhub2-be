@@ -22,7 +22,11 @@ export class CallForPaperController {
         @Query('page',new DefaultValuePipe(1), ParseIntPipe) page : number,
         @Query('perPage',new DefaultValuePipe(3), ParseIntPipe) perPage : number,
     ): Promise<PaginatorTypes.PaginatedResult<CallForPaperData>> {
-        return this.callForPaperService.find({page, perPage});
+        const callForPapers = await this.callForPaperService.getCallForPapers({
+            page,
+            perPage
+        });
+        return callForPapers;
     }
 
     @Post()

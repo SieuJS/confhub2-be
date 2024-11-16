@@ -15,6 +15,5 @@ export class FoRDivisionData {
         this.id = data.id;
         this.name = data.name as string;
         this.code = data.code as string;
-
     }
 }

@@ -3,6 +3,8 @@ import { PrismaService } from "../../common";
 import * as fs from "fs";
 import * as path from "path";
 
+import { FoRDivisionData, FoRDivisionInput, FoRGroupData, FoRGroupInput } from "../model";
+
 @Injectable()
 export class FieldOfResearchService {
     constructor(private readonly prismaService: PrismaService) {}
@@ -57,4 +59,41 @@ export class FieldOfResearchService {
             console.error("Failed to load field of research data", error);
         }
     }
+
+    async findOrCreateDivision(input : FoRDivisionInput) : Promise<FoRDivisionData> {
+        let divisionGroup = await this.prismaService.for_division.upsert({
+            where: { code : input.code },
+            update: {  },
+            create:  input  ,
+        });
+
+        return divisionGroup as FoRDivisionData ;
+    }
+
+    async findOrCreateGroup(input : FoRGroupInput) : Promise<FoRGroupData> {
+        let group = await this.prismaService.for_group.upsert({
+            where: { code : input.code },
+            update: {  },
+            create:  input  ,
+        });
+        return group as FoRGroupData;
+    }
+
+    async findDivision(filter: FoRDivisionData): Promise<FoRDivisionData[]> {
+        const divisions = await this.prismaService.for_division.findMany({
+            where: filter,
+            include : {
+                for_group : true
+            }
+        });
+        return divisions as FoRDivisionData[];
+    }
+
+    async findGroup(filter: FoRGroupData): Promise<FoRGroupData[]> {
+        const groups = await this.prismaService.for_group.findMany({
+            where: filter
+        });
+        return groups as FoRGroupData[];
+    }
+
 }

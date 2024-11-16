@@ -6,7 +6,8 @@ import {ScheduleModule} from '@nestjs/schedule'
 import { JobScheduleService, CrawlConferenceService } from "./services";
 import { ConferenceModule } from "../conference";
 import { JobAdapterModule,MongodbModule, ConferenceAdapterModule } from "./modules";
-
+import { CallForPaperModule } from "../call-for-paper";
+import { FieldOfResearchModule } from "../field-of-research/field-of-research.module";
 @Module({
     imports: [
         CommonModule,
@@ -15,6 +16,8 @@ import { JobAdapterModule,MongodbModule, ConferenceAdapterModule } from "./modul
         ConferenceAdapterModule,
         RankSourceModule,
         ConferenceModule,
+        CallForPaperModule,
+        FieldOfResearchModule,
         ScheduleModule.forRoot()
     ],
     providers: [JobScheduleService, CrawlConferenceService],

@@ -12,7 +12,7 @@ export class ConferenceAdapterService {
 
     async create(conference: ConferenceAdapterInput): Promise<ConferenceAdapterData> {
         const conferenceAdapter = await this.conferenceModel.create(conference)
-        return new ConferenceAdapterData(conferenceAdapter); ;
+        return conferenceAdapter as ConferenceAdapterData;
     }
 
     async findAll(): Promise<ConferenceAdapterData[]> {

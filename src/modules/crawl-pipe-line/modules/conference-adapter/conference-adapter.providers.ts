@@ -9,3 +9,4 @@ export const ConferenceAdapterProviders = [
         inject : [MongoService.DATABASE_CONNECTION]
     }
 ];
+

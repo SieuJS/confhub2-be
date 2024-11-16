@@ -10,10 +10,9 @@ export class ConferenceAdapterPipe implements PipeTransform {
                 Acronym : value.acronym,
                 Rank : value.rank,
                 Source : value.source,
-                PrimaryFoR : value.primaryFoR, 
+                PrimaryFoR : value.primaryFoR || value.PrimaryFoR, 
             } as ConferenceAdapterInput;
         }
         return value;
-
     }
 }

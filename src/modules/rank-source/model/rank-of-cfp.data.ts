@@ -6,8 +6,10 @@ import { Decimal } from "@prisma/client/runtime/library";
 export class RankOfCfpData {
     @ApiProperty({description: 'Unique identifier of the rank of cfp.', example: '75442486-0878-440c-9db1-a7006c25a39f'})
     id: string;
+    
     @ApiProperty({description: 'ID Rank of the cfp', example: "23231232-0878-440c-9db1-a7006c25a39f"})
     rank_id: string | null;
+
     @ApiProperty({description: 'ID Cfp of the rank', example: '12313235-0878-440c-9db1-a7006c25a39f'})
     cfp_id: string | null;
 

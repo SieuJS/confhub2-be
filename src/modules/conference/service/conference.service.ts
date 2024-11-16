@@ -71,6 +71,23 @@ export class ConferenceService {
         return this.txHost.tx.conferences.create({data});
     }
 
-
-
+    public async findOrCreate(input: ConferenceInput): Promise<{isExisted : boolean, data : ConferenceData}> {
+        const existConference = await this.txHost.tx.conferences.findUnique({
+            where: {
+                name_acronym: {
+                    name: input.name as string,
+                    acronym: input.acronym as string
+                }
+            }
+        });
+        if(existConference) {
+            return {isExisted: true, data: new ConferenceData(existConference)};
+        }
+        else {
+            const conference = await this.txHost.tx.conferences.create({
+                data: input
+            });
+            return {isExisted: false, data: conference};
+        }
+    }
 }

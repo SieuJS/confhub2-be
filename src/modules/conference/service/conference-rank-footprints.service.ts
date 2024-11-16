@@ -25,4 +25,21 @@ export class ConferenceRankFootPrintsService {
         return footprint as ConferenceRankFootPrintsData;
     }
 
+    public async findOrCreate(input: ConferenceRankFootPrintsInput): Promise<ConferenceRankFootPrintsData> {
+        const footprint = await this.txHost.tx.conference_rank_footprints.upsert({
+            where: {
+                conference_id_rank_id_for_id_year : {
+                    conference_id : input.conference_id,
+                    rank_id : input.rank_id,
+                    for_id : input.for_id,
+                    year : input.year
+                }
+                },
+                update: {},
+                create: input
+            },
+        );
+        return footprint as ConferenceRankFootPrintsData;
+    }
+
 }

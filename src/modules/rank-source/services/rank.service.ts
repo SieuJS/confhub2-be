@@ -38,4 +38,18 @@ export class RankService {
     async createRankOfCfp(data: RankOfCfpData): Promise<RankOfCfpData> {
         return this.txHost.tx.rank_of_cfp.create({ data });
     }
+
+    async createOrFindRankOfSource(data: SourceRanksInput): Promise<SourceRanksData> {
+        const rank = await this.txHost.tx.source_ranks.upsert ({
+            where: {
+                source_id_rank : {
+                    source_id: data.source_id as string,
+                    rank: data.rank as string
+                }
+            },
+            update: {},
+            create: data
+        });
+        return rank; 
+    }
 }
