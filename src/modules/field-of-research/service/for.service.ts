@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../common";
+import {TransactionHost} from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import * as fs from "fs";
 import * as path from "path";
 
@@ -7,7 +9,11 @@ import { FoRDivisionData, FoRDivisionInput, FoRGroupData, FoRGroupInput } from "
 
 @Injectable()
 export class FieldOfResearchService {
-    constructor(private readonly prismaService: PrismaService) {}
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly txHost: TransactionHost<TransactionalAdapterPrisma>
+
+    ) {}
 
     async loadFieldOfResearch() {
         try {
@@ -71,7 +77,7 @@ export class FieldOfResearchService {
     }
 
     async findOrCreateGroup(input : FoRGroupInput) : Promise<FoRGroupData> {
-        let group = await this.prismaService.for_group.upsert({
+        let group = await this.txHost.tx.for_group.upsert({
             where: { code : input.code },
             update: {  },
             create:  input  ,

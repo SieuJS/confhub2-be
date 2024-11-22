@@ -16,10 +16,14 @@ export class RankOfCfpData {
     @ApiProperty({description: 'Year of rank', example: 2021})
     year: Decimal | null;
 
+    @ApiProperty({description : "Id of source", example: "23231232-0878-440c-9db1-a7006c25a39f"})
+    for_group_id : string | null;
+
     constructor (entity: RankOfCfp) {
         this.id = entity.id;
         this.rank_id = entity.rank_id;
         this.cfp_id = entity.cfp_id;
         this.year = entity.year ;
+        this.for_group_id = entity.for_group_id;
     }
 }

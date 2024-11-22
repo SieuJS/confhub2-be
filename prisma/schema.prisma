@@ -95,13 +95,15 @@ model rank_of_cfp {
   rank_id         String?          @db.Uuid
   cfp_id          String?          @db.Uuid
   year            Decimal?         @db.Decimal
+  for_group_id    String?          @db.Uuid
   call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_has_rank")
   ranks_of_source source_ranks?    @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_cfp")
+  for_group for_group ? @relation(fields: [for_group_id], references: [id],onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_cfp_for_group")
 }
 
 model for_division {
   id        String      @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
-  code      String?     @unique @db.VarChar(2)
+  code      String?     @unique @db.VarChar(3)
   name      String?
   for_group for_group[]
 }
@@ -112,6 +114,7 @@ model for_group {
   name                       String?
   division_id                String?                      @db.Uuid
   conference_rank_footprints conference_rank_footprints[]
+  rank_of_cfp                rank_of_cfp[]
   for_division               for_division?                @relation(fields: [division_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_for_group_of_division")
   journal_rank_footprints    journal_rank_footprints[]
 }

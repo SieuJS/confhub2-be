@@ -1,5 +1,6 @@
 import {ConferenceAdapter as Conference} from './conference-adapter.interface';
 import { ApiProperty } from "@nestjs/swagger";
+import { CrawlDateData } from './crawl-date.data';
 
 export class ConferenceAdapterData {
     @ApiProperty ({description: 'id of the conference', example: '5f7b7b7b7b7b7b7b7b7b7b7b'})
@@ -25,13 +26,13 @@ export class ConferenceAdapterData {
     @ApiProperty({description: 'links of the conference', example: []})
     Links: string[];
     @ApiProperty({description: 'conference date of the conference', example: []})
-    ConferenceDate: string[];
+    ConferenceDate: CrawlDateData[];
     @ApiProperty({description: 'submission date of the conference', example: []})
-    SubmissonDate: string[];
+    SubmissonDate: CrawlDateData[];
     @ApiProperty({description: 'notification date of the conference', example: []})
-    NotificationDate: string[];
+    NotificationDate: CrawlDateData[];
     @ApiProperty({description: 'camera ready of the conference', example: []})
-    CameraReady: string[];
+    CameraReady: CrawlDateData[];
     @ApiProperty({description: 'call for paper of the conference', example: ''})
     CallForPaper: string;
     @ApiProperty({description: 'location of the conference', example: ''})

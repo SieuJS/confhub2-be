@@ -14,6 +14,7 @@ export class FieldOfResearchController {
         private readonly fieldOfResearchService: FieldOfResearchService,
         private readonly configService: ConfigService
     ) {
+        
         if (this.config.FIELD_CODE_LOADED === "no") {
             console.log(
                 "Field of Research is ready" + this.config.FIELD_CODE_LOADED

@@ -26,20 +26,22 @@ export class ConferenceRankFootPrintsService {
     }
 
     public async findOrCreate(input: ConferenceRankFootPrintsInput): Promise<ConferenceRankFootPrintsData> {
-        const footprint = await this.txHost.tx.conference_rank_footprints.upsert({
-            where: {
-                conference_id_rank_id_for_id_year : {
-                    conference_id : input.conference_id,
-                    rank_id : input.rank_id,
-                    for_id : input.for_id,
-                    year : input.year
+        const footprint = await this.prismaService.conference_rank_footprints.findUnique ({
+            where : {
+                conference_id_rank_id_for_id_year: {
+                    conference_id: input.conference_id as string,
+                    rank_id: input.rank_id as string,
+                    for_id: input.for_id as string,
+                    year: input.year 
                 }
-                },
-                update: {},
-                create: input
-            },
-        );
-        return footprint as ConferenceRankFootPrintsData;
-    }
+            }
+        })
 
+        if(footprint) {
+            return footprint as ConferenceRankFootPrintsData;
+        }
+        else {
+            return this.create(input);
+        }
+    }
 }

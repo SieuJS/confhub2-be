@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../common';
 import { CallForPaperData, CallForPaperInput, ImportantDateData, ImportantDateInput } from './model';
 import { PaginatorTypes, paginator } from '@nodeteam/nestjs-prisma-pagination';
+import { DetailedCfpData } from './model';
+import {TransactionHost} from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+
 
 const paginate: PaginatorTypes.PaginateFunction = paginator({ perPage: 10 });
 
@@ -9,6 +13,7 @@ const paginate: PaginatorTypes.PaginateFunction = paginator({ perPage: 10 });
 export class CallForPaperService {
     public constructor(
         private readonly prismaService: PrismaService,
+        private readonly txHost: TransactionHost<TransactionalAdapterPrisma>
     ) {}
 
     public async find(filter : CallForPaperData ): Promise<CallForPaperData[]> {
@@ -29,16 +34,38 @@ export class CallForPaperService {
             {
                 where,
                 orderBy,
+                
             },
             {
                 page,
                 perPage
+            },
+        );
+    }
+
+    public async getDetailedCallForPapers({where , orderBy, page, perPage} : {where?: CallForPaperInput,
+        orderBy?: { [key: string]: 'asc' | 'desc' },
+        page?: number,
+        perPage?: number}): Promise<PaginatorTypes.PaginatedResult<DetailedCfpData>> {
+        return paginate(this.prismaService.call_for_papers,
+            {
+            where,
+            orderBy,
+            include: {
+                important_dates: true,
+                rank_of_cfp: true,
+                conferences: true,
             }
+            },
+            {
+            page,
+            perPage
+            },
         );
     }
 
     public async create(data: CallForPaperInput): Promise<CallForPaperData> {
-        const callForPaper = await this.prismaService.call_for_papers.create({
+        const callForPaper = await this.txHost.tx.call_for_papers.create({
             data: {
                 ...data
             }
@@ -58,11 +85,10 @@ export class CallForPaperService {
         return importantDates.map(importantDate => new ImportantDateData(importantDate));
     }
 
-    public async addCFPImportantdates(cfp_id: string, data: ImportantDateInput): Promise<ImportantDateData> {
+    public async createCFPImportantdates( data: ImportantDateInput): Promise<ImportantDateData> {
         const importantDate = await this.prismaService.important_dates.create({
             data: {
                 ...data,
-                cfp_id,
                 date_value: (new Date(data.date_value as string)).toISOString()
             }
         });

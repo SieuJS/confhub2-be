@@ -2,7 +2,7 @@ import { ConferenceAdapterService, ConferenceAdapterData, ConferenceAdapterInput
 import { Controller, HttpStatus , Get, Post, Body} from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { ConferenceRankFootPrintsService, ConferenceService } from "../../conference";
-import { RankService, SourceService } from "../../rank-source";
+import {  RankService, SourceService } from "../../rank-source";
 import { FieldOfResearchService } from "../../field-of-research/service";
 import { ConferenceAdapterPipe } from "../pipes/conference-adapter.pipe";
 import { Decimal } from "@prisma/client/runtime/library";
@@ -22,7 +22,7 @@ class ResponseMessage {
 
 @Controller('/pipe-line/transfer')
 @ApiTags('Crawl Pipeline')
-export class ConferenceCrawlController {
+export class TransferCrawlController {
     constructor(
         private readonly conferenceAdapterService: ConferenceAdapterService,
         private conferenceService : ConferenceService,
@@ -49,20 +49,15 @@ export class ConferenceCrawlController {
     }
 
     @Post('/import')
-
     @ApiOperation({ summary: 'Import conference for job work' })
     @ApiResponse({ status: HttpStatus.CREATED, type: ResponseMessage })
     @Transactional()
     public async importConference(@Body(ConferenceAdapterPipe) input :ConferenceAdapterInput ): Promise<ResponseMessage> {
         // check for exists conference in the database;
-        let isExisted = false;
         const existsConference = await this.conferenceService.findOrCreate({
             name : input.Title , 
             acronym : input.Acronym,
         })
-
-        isExisted = existsConference.isExisted; 
-
         const existsSource = await this.sourceService.findOrCreate({
             name : input.Source, 
             link : "",
@@ -72,40 +67,40 @@ export class ConferenceCrawlController {
             rank : input.Rank,
             value :  new Decimal(0),
         })
-        input.PrimaryFoR.map(async field => {
+
+        await input.PrimaryFoR.forEach(async field => {
+            field = `${field}`.trim();
             const existForGroup = await this.fieldOfReasearchService.findOrCreateGroup({
                  code : field ,
                  name : "unknown"
             })
 
-            const rankFootPrint = await this.conferenceRankFootPrintService.findOrCreate({
+            console.log("Conference in", existsConference.data.acronym)
+
+            await this.conferenceRankFootPrintService.findOrCreate({
                 conference_id : existsConference.data.id,
                 rank_id : existsRank.id,
-                year : new Decimal(parseInt(existsConference.data.acronym?.slice(-4) as string)),
+                year : new Decimal(parseInt(input.Source.slice(-4) as string)) ,
                 for_id : existForGroup.id
             })
-
-            return rankFootPrint;
         })
 
-        if(!isExisted) {
-            return {
-                message : "Mode 2.0",
-                newMongoInstance : true,
-                crawlJob : 'crawl-job',
-                newPgInstance : true
-            };
-        }
-        
         const existsCfp = await this.callForPaperService.find({
             conference_id : existsConference.data.id,
             status : true
 
-        } as CallForPaperData)
+        } as CallForPaperData) as CallForPaperData[];
 
+        
         if (existsCfp.length !== 0) {
             return {message : 'Nothing change'} as ResponseMessage;
         }
+
+        await this.callForPaperService.create({
+            conference_id : existsConference.data.id,
+            status : true
+        } as CallForPaperData);
+        
 
         const conferenceAdapter = await this.conferenceAdapterService.create(input);
         
@@ -114,7 +109,6 @@ export class ConferenceCrawlController {
             type : "import conference",
             status : "pending"
         } as JobAdapterData)
-
         
         return{
             message : "Mode 2.0",

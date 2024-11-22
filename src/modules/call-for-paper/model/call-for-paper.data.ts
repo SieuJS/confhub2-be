@@ -58,7 +58,7 @@ export class CallForPaperData {
         this.avg_rating = entity.avg_rating;
         this.access_type = entity.access_type;
         this.location = entity.location
-        this.status = entity.status;
+
     }
 
 }

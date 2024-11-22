@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+import { CrawlDateData } from "./crawl-date.data";
 export interface ConferenceAdapter extends Document {
     Title: string;
     Acronym: string;
@@ -10,10 +11,10 @@ export interface ConferenceAdapter extends Document {
     Comments: string;
     AverageRating: string;
     Links: string[];
-    ConferenceDate: string[];
-    SubmissonDate: string[];
-    NotificationDate: string[];
-    CameraReady: string[];
+    ConferenceDate: CrawlDateData[];
+    SubmissonDate: CrawlDateData[];
+    NotificationDate: CrawlDateData[];
+    CameraReady: CrawlDateData[];
     CallForPaper: string;
     Location: string;
     Type: string;

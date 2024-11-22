@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RankOfCfpData, SourceRanksData, SourceRanksInput } from '../model';
+import { RankOfCfpData, RankOfCfpInput, SourceRanksData, SourceRanksInput } from '../model';
 import { PrismaService } from '../../common';
 import { TransactionHost } from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
@@ -35,7 +35,7 @@ export class RankService {
         return this.txHost.tx.source_ranks.create({ data });
     }
 
-    async createRankOfCfp(data: RankOfCfpData): Promise<RankOfCfpData> {
+    async createRankOfCfp(data: RankOfCfpInput): Promise<RankOfCfpData> {
         return this.txHost.tx.rank_of_cfp.create({ data });
     }
 

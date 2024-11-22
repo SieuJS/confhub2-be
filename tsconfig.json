@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "esModuleInterop": true,
     "declaration": false,
     "noImplicitAny": true,
     "removeComments": true,
@@ -15,7 +16,7 @@
     "noUnusedLocals": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*", "**/*.ts"
   ],
   "exclude": [
     "node_modules",

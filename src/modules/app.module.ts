@@ -7,7 +7,7 @@ import { ConferenceModule } from './conference/conference.module';
 import { CallForPaperModule } from './call-for-paper/call-for-paper.module';
 import { RankSourceModule } from './rank-source/rank-source.module';
 import { JournalModule } from './journal/journal.module';
-import { JobModule } from './job/job.module';
+
 import { CrawlPipeLineModule } from './crawl-pipe-line';
 import { PrismaService } from './common';
 import { FieldOfResearchModule } from './field-of-research/field-of-research.module';
@@ -34,7 +34,6 @@ import { FieldOfResearchModule } from './field-of-research/field-of-research.mod
         CallForPaperModule,
         RankSourceModule,
         JournalModule,
-        JobModule,
         CrawlPipeLineModule,
         FieldOfResearchModule,
     ],

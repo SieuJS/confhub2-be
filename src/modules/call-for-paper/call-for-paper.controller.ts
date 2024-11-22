@@ -3,20 +3,18 @@ import { CallForPaperService } from './call-for-paper.service';
 import { CallForPaperData, CallForPaperInput, ImportantDateData } from './model';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaginatorTypes} from '@nodeteam/nestjs-prisma-pagination'; 
-import { bool } from 'joi';
-
-
-
 @Controller('call-for-paper')
 @ApiTags('Call For Paper')
 export class CallForPaperController {
     public constructor (
         private readonly callForPaperService: CallForPaperService 
-    ){}
+    ){
+
+    }
 
     @Get('/')
     @ApiOperation({ summary: 'Find call for papers' })
-    @ApiQuery({name : 'status', required : false, type : bool})
+    @ApiQuery({name : 'status', required : false, type : Boolean})
     @ApiResponse({ status: HttpStatus.OK, type: CallForPaperData }) 
     public async find(
         @Query('page',new DefaultValuePipe(1), ParseIntPipe) page : number,
@@ -26,6 +24,7 @@ export class CallForPaperController {
             page,
             perPage
         });
+
         return callForPapers;
     }
 
@@ -57,7 +56,8 @@ export class CallForPaperController {
     public async addCFPImportantdates(@Param('cfp_id') cfp_id: string, @Body() input: ImportantDateData): Promise<ImportantDateData> {
         try
         {
-            const importantDate = await this.callForPaperService.addCFPImportantdates(cfp_id, input);
+            input.cfp_id = cfp_id;
+            const importantDate = await this.callForPaperService.createCFPImportantdates( input);
             return importantDate;
         }catch(error) {
             // this.logger.error(`Error in creating call for papers ${error}`);
@@ -65,4 +65,11 @@ export class CallForPaperController {
             throw new PreconditionFailedException('Some error occured when create call for papers');
         }
     }
+
+    @Get('/detailedCfp')
+    @ApiOperation({ summary: 'Find all detailed call for papers' })
+    async getDetailedCallForPapers(){
+        return this.callForPaperService.getDetailedCallForPapers({});
+    }
+
 }
