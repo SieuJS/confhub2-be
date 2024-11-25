@@ -30,3 +30,6 @@ npm-debug.log
 package-lock.json
 .vscode
 /prisma/certs
+
+#secret 
+secret

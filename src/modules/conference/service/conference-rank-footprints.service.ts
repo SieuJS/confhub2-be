@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../common";
-import { ConferenceRankFootPrintsData, ConferenceRankFootPrintsInput } from "../model";
+import { ConferenceRankFootPrintData, ConferenceRankFootPrintInput } from "../model";
 import {TransactionHost} from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 
@@ -11,21 +11,21 @@ export class ConferenceRankFootPrintsService {
         private readonly txHost: TransactionHost<TransactionalAdapterPrisma>
     ) {}
 
-    public async find(filter: ConferenceRankFootPrintsData): Promise<ConferenceRankFootPrintsData[]> {
+    public async find(filter: ConferenceRankFootPrintData): Promise<ConferenceRankFootPrintData[]> {
         const footprints = await this.prismaService.conference_rank_footprints.findMany({
             where: filter
         });
-        return footprints as ConferenceRankFootPrintsData[];
+        return footprints as ConferenceRankFootPrintData[];
     }
 
-    public async create(data: ConferenceRankFootPrintsInput): Promise<ConferenceRankFootPrintsData> {
+    public async create(data: ConferenceRankFootPrintInput): Promise<ConferenceRankFootPrintData> {
         const footprint = await this.txHost.tx.conference_rank_footprints.create({
             data
         });
-        return footprint as ConferenceRankFootPrintsData;
+        return footprint as ConferenceRankFootPrintData;
     }
 
-    public async findOrCreate(input: ConferenceRankFootPrintsInput): Promise<ConferenceRankFootPrintsData> {
+    public async findOrCreate(input: ConferenceRankFootPrintInput): Promise<ConferenceRankFootPrintData> {
         const footprint = await this.prismaService.conference_rank_footprints.findUnique ({
             where : {
                 conference_id_rank_id_for_id_year: {
@@ -38,7 +38,7 @@ export class ConferenceRankFootPrintsService {
         })
 
         if(footprint) {
-            return footprint as ConferenceRankFootPrintsData;
+            return footprint as ConferenceRankFootPrintData;
         }
         else {
             return this.create(input);

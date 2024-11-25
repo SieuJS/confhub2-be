@@ -1,8 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common';
-import { ConferenceData, ConferenceInput, ConferenceRankFootPrintsData } from '../model';
+import { ConferenceData, ConferenceInput } from '../model';
 import {TransactionHost} from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+
+import {  getPaginatedResult } from '@nodeteam/nestjs-prisma-pagination';
+
+import { ConferenceWithCfpsRankFootprintsData, ConferenceWithCfpsRankFootprintsPaginateData } from '../model';
+
+import { IncludeConferenceQuery } from '../query';
+
+
 @Injectable()
 export class ConferenceService {
     public constructor(
@@ -10,14 +18,53 @@ export class ConferenceService {
         private readonly txHost: TransactionHost<TransactionalAdapterPrisma>
     ) {}
 
-    public async find(filter : ConferenceData ): Promise<ConferenceData[]> {
+    public async find({
+        where , orderBy, pagination
+    } : {
+        where?: ConferenceData,
+        orderBy?: { [key: string]: 'asc' | 'desc' },
+        pagination?: { page: number, perPage: number }
+    } ): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
+
         const conferences = await this.prismaService.conferences.findMany({
             where : {
-                ...filter
-            }
-        });
+                ...where
+            },
+            orderBy : {
+                ...orderBy
+            },
+            include : 
+                IncludeConferenceQuery,
+        }) ;
 
-        return conferences.map(conference => new ConferenceData(conference));
+        return getPaginatedResult({
+            data : conferences.map(conference => new ConferenceWithCfpsRankFootprintsData(conference as ConferenceWithCfpsRankFootprintsData)),
+            pagination : {
+                page : 1,
+                perPage : 10,
+                skip : 0,
+            }
+        } )
+    }
+
+    public async search(filter : any) {
+        const conferences = await this.prismaService.conferences.findMany({
+            where : {
+                call_for_papers :{
+                    some : {
+                        start_date : {
+                            gte : filter.start_date
+                        },
+                        end_date : {
+                            lte : filter.end_date
+                        }
+                    }
+                }
+            },
+            include : IncludeConferenceQuery
+        })
+
+        return conferences;
     }
 
     public async findOne(filter : ConferenceData): Promise<ConferenceData> {
@@ -30,43 +77,7 @@ export class ConferenceService {
         return new ConferenceData(conference as ConferenceData);
     }
 
-    public async findManyWithRankFootprints(filter: ConferenceData): Promise<
-    (ConferenceData & { rank_foot_prints: ConferenceRankFootPrintsData[] })[]> {
-        const conferences = await this.prismaService.conferences.findMany({
-            where: filter,
-            include: {
-                conference_rank_footprints: true
-            }
-        });
-
-        return conferences.map(conference => {
-            let rank_foot_prints: ConferenceRankFootPrintsData[] = conference.conference_rank_footprints.map(footprint => new ConferenceRankFootPrintsData(footprint));
-            return {
-                ...new ConferenceData(conference),
-                rank_foot_prints
-            };
-        });
-    }
-
-    public async findOneWithRankFootprints(filter: ConferenceData): Promise<ConferenceData & { rank_foot_prints: ConferenceRankFootPrintsData[] }> {
-        const conference = await this.prismaService.conferences.findFirst({
-            where: filter,
-            include: {
-                conference_rank_footprints: true
-            }
-        });
-
-        if(!conference) {
-            return null as any;
-        }
-
-        let rank_foot_prints: ConferenceRankFootPrintsData[] = conference?.conference_rank_footprints.map(footprint => new ConferenceRankFootPrintsData(footprint)) as ConferenceRankFootPrintsData[];
-        return {
-            ...new ConferenceData(conference as ConferenceData),
-            rank_foot_prints
-        };
-    }
-
+   
     public async create(data: ConferenceInput): Promise<ConferenceData> {
         return this.txHost.tx.conferences.create({data});
     }

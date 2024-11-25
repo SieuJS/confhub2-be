@@ -1,12 +1,15 @@
-import { Body, Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query } from '@nestjs/common';
+
 import {Config, LoggerService} from '../../common';
 
 import {Service} from '../../tokens';
 
 import { ConferencePipe } from '../flow/conference.pipe';
-import { ConferenceData, ConferenceInput } from '../model';
+import { ConferenceData, ConferenceInput, ConferenceWithCfpsRankFootprintsPaginateData} from '../model';
+
 import { ConferenceService } from '../service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
 
 @Controller('conference')
 @ApiTags('Conference')
@@ -19,10 +22,15 @@ export class ConferenceController {
     ){}
 
     @Get()
-    @ApiOperation({ summary: 'Find conferences' })
-    @ApiResponse({ status: HttpStatus.OK, isArray: true, type: ConferenceData })
-    public async find(): Promise<ConferenceData[]> {
-        return this.conferenceService.find({} as ConferenceData);
+    @ApiResponse({ status: HttpStatus.OK, type : ConferenceWithCfpsRankFootprintsPaginateData })
+    public async find(@Query () {
+        where , orderBy, pagination
+    } : {
+        where?: ConferenceData,
+        orderBy?: { [key: string]: 'asc' | 'desc' },
+        pagination?: { page: number, perPage: number }
+    }): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
+        return this.conferenceService.find({where, orderBy, pagination} );
     }
 
     @Post()

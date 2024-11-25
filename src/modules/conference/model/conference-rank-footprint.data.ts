@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Decimal } from "@prisma/client/runtime/library";
 
 
-export class ConferenceRankFootPrintsData {
+export class ConferenceRankFootPrintData {
     @ApiProperty({description: 'Id of footprint', example: '23213-12312-12312-12312'})
     id: string;
 
