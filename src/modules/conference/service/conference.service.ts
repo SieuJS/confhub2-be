@@ -9,6 +9,8 @@ import {  getPaginatedResult } from '@nodeteam/nestjs-prisma-pagination';
 import { ConferenceWithCfpsRankFootprintsData, ConferenceWithCfpsRankFootprintsPaginateData } from '../model';
 
 import { IncludeConferenceQuery } from '../query';
+import { PatternSearchCfpQuery } from '../../call-for-paper/query';
+import { CallForPaperData } from '../../call-for-paper';
 
 
 @Injectable()
@@ -47,17 +49,24 @@ export class ConferenceService {
         } )
     }
 
-    public async search(filter : any) {
+    public async search(    filter: CallForPaperData & {
+        start_date_range: {
+            gte: Date;
+            lte: Date;
+        };
+        end_date_range: {
+            gte: Date;
+            lte: Date;
+        };
+    }) {
+
         const conferences = await this.prismaService.conferences.findMany({
             where : {
                 call_for_papers :{
                     some : {
-                        start_date : {
-                            gte : filter.start_date
-                        },
-                        end_date : {
-                            lte : filter.end_date
-                        }
+                        AND :[
+                            ...PatternSearchCfpQuery(filter)
+                        ]
                     }
                 }
             },
