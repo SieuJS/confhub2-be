@@ -1,7 +1,8 @@
 import { Controller, Get, HttpStatus, ParseIntPipe, Post, Query } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JobAdapterData , JobAdapterInput, JobAdapterService} from '../modules';
 import { PagingResponse } from '../../common';
+import { number } from 'joi';
 
 @Controller('conf-crawler/job')
 @ApiTags('Crawl Pipeline')
@@ -11,6 +12,7 @@ export class JobCrawlController {
     ) {}
     @Get()
     @ApiOperation({ summary: 'Get all jobs' })
+    @ApiQuery({name: 'page', required: false, type: number})
     @ApiResponse({status : HttpStatus.OK, isArray: true, type: PagingResponse<JobAdapterData>})
     async findAll(@Query('page',ParseIntPipe) page:number, @Query('size',ParseIntPipe) size:number): Promise<PagingResponse<JobAdapterData>> {
         const offset = (page - 1) * size;

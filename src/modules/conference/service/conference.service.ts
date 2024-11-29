@@ -5,10 +5,24 @@ import {TransactionHost} from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 @Injectable()
 export class ConferenceService {
+    
     public constructor(
         private readonly prismaService: PrismaService,
         private readonly txHost: TransactionHost<TransactionalAdapterPrisma>
     ) {}
+
+    // public async getTotalAndConference(offset: number, size: number, filterCondition:ConferenceData): Promise<{ total: number, conference: ConferenceData[] }> {
+    //     const total = await this.prismaService.conferences.count();
+    //     const conference = await this.find(filterCondition);
+    //     return { total, conference };
+
+    // }
+    public async getTotalAndConference(offset: number, limit: number, filterCondition: ConferenceData): Promise<{ total: number, conference: ConferenceData[] }> {
+        const total = await this.prismaService.conferences.count();
+        const conference = await this.find(filterCondition);
+        return { total, conference };
+    }
+    
 
     public async find(filter : ConferenceData ): Promise<ConferenceData[]> {
         const conferences = await this.prismaService.conferences.findMany({
