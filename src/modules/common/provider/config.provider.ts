@@ -12,6 +12,7 @@ export const configProvider = {
             API_PORT: Joi.number().required(),
             API_PREFIX: Joi.string().required(),
             SWAGGER_ENABLE: Joi.number().required(),
+            FIELD_CODE_LOADED : Joi.string().valid('yes', 'no').required(),
             JWT_SECRET: Joi.string().required(),
             JWT_ISSUER: Joi.string().required(),
             HEALTH_TOKEN: Joi.string().required(),

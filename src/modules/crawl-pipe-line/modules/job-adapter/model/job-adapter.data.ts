@@ -1,6 +1,8 @@
 import {JobAdapter as Job, JobProgress} from "./job-adapter.interface";
 import { ApiProperty } from "@nestjs/swagger";
 export class JobAdapterData {
+    @ApiProperty({description: "id of job", example: "5f7b7b7b7b7b7b7b7b7b7b7b"})
+    _id : string ;
     @ApiProperty({description: 'status of the job', example: 'running'})
     status: string;
     @ApiProperty({description: 'conference id', example: '5f7b7b7b7b7b7b7b7b7b7b7b'})
@@ -16,6 +18,7 @@ export class JobAdapterData {
     @ApiProperty({description: 'duration of the job', example: 0})
     duration: number;
     constructor(job: Job) {
+        this._id = job._id.toString();
         this.status = job.status;
         this.conf_id = job.conf_id;
         this.type = job.type;

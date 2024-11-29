@@ -30,4 +30,15 @@ export class SourceService{
         return this.txHost.tx.sources.create({data});
 
     }
+
+    async findOrCreate(data: SourceInput): Promise<SourceData> {
+        const source = await this.txHost.tx.sources.upsert({
+            where: {
+                name : data.name as string
+            },
+            update: {},
+            create: data
+        });
+        return source as SourceData;
+    }
 }

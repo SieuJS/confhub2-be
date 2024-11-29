@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { conferences as Conference } from "@prisma/client";
 
+
 export class ConferenceData {
     public static readonly NAME_LENGTH = 100;
     public static readonly ACRONYM_LENGTH = 10;
@@ -12,6 +13,7 @@ export class ConferenceData {
 
     @ApiProperty({ description: "Conference acronym", example: "CITA" })
     public readonly acronym: string  | null;
+
 
     public constructor(entity: Conference) {
         this.id = entity.id;

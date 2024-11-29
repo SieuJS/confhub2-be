@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConferenceController } from './controller'
-import { ConferenceService } from './service';
+import { ConferenceService, ConferenceRankFootPrintsService } from './service';
 import { CommonModule } from '../common';
+
 
 @Module({
   imports: [CommonModule],
   controllers: [ConferenceController],
-  providers: [ConferenceService],
-  exports : [ConferenceService]
+  providers: [ConferenceService , ConferenceRankFootPrintsService],
+  exports : [ConferenceService, ConferenceRankFootPrintsService]
 })
 export class ConferenceModule {}

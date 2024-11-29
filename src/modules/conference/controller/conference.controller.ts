@@ -1,11 +1,13 @@
-import { Body, Controller, Get, HttpStatus, Inject, ParseIntPipe, Post, PreconditionFailedException, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query } from '@nestjs/common';
+
 import {Config, LoggerService} from '../../common';
 import {Service} from '../../tokens';
 import { ConferencePipe } from '../flow/conference.pipe';
-import { ConferenceData, ConferenceInput } from '../model';
+import { ConferenceData, ConferenceInput, ConferenceWithCfpsRankFootprintsPaginateData} from '../model';
+
 import { ConferenceService } from '../service';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PagingResponse } from '../../common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
 
 @Controller('conference')
 @ApiTags('Conference')
@@ -18,24 +20,15 @@ export class ConferenceController {
     ){}
 
     @Get()
-    @ApiOperation({ summary: 'Find conferences' })
-    @ApiQuery({ name: 'page', required: false, type: Number })
-    @ApiResponse({ status: HttpStatus.OK, type: PagingResponse<ConferenceData> })
-    public async find(
-        @Query('page', ParseIntPipe) page: number,
-        @Query('size', ParseIntPipe) pageSize: number,
-        @Body() filterCondition: ConferenceData
-    ): Promise<PagingResponse<ConferenceData>> {
-        const offset = (page - 1) * pageSize;
-        const { total, conference } = await this.conferenceService.getTotalAndConference(offset, pageSize, filterCondition);
-        return {
-            maxRecords: total,
-            maxPages: Math.ceil(total / pageSize),
-            size: pageSize,
-            currentPage: page,
-            count: conference.length,
-            data: conference
-        };
+    @ApiResponse({ status: HttpStatus.OK, type : ConferenceWithCfpsRankFootprintsPaginateData })
+    public async find(@Query () {
+        where , orderBy, pagination
+    } : {
+        where?: ConferenceData,
+        orderBy?: { [key: string]: 'asc' | 'desc' },
+        pagination?: { page: number, perPage: number }
+    }): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
+        return this.conferenceService.find({where, orderBy, pagination} );
     }
 
     @Post()

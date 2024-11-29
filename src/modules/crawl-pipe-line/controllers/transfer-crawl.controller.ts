@@ -1,27 +1,37 @@
-import { ConferenceAdapterService, ConferenceAdapterData, ConferenceAdapterInput, JobAdapterInput } from "../modules";
+import { ConferenceAdapterService, ConferenceAdapterData, ConferenceAdapterInput, JobAdapterData } from "../modules";
 import { Controller, HttpStatus , Get, Post, Body} from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import {ConferenceService, ConferenceData} from "../../conference"
-import { SourceService, RankService } from "../../rank-source";
-import { SourceData, SourceInput, SourceRanksInput, SourceRanksData } from "../../rank-source/model";
-import { Decimal } from "@prisma/client/runtime/library";
-import {Transactional} from "@nestjs-cls/transactional";
+import { ConferenceRankFootPrintsService, ConferenceService } from "../../conference";
+import {  RankService, SourceService } from "../../rank-source";
+import { FieldOfResearchService } from "../../field-of-research/service";
 import { ConferenceAdapterPipe } from "../pipes/conference-adapter.pipe";
+import { Decimal } from "@prisma/client/runtime/library";
+import {Transactional} from "@nestjs-cls/transactional"
+import { CallForPaperData, CallForPaperService } from "../../call-for-paper";
+import { JobAdapterService } from "../modules";
 
-import { JobAdapterService} from "../modules";
 class ResponseMessage {
-    message : string ;
+    constructor (
+        public message : string,
+        public newMongoInstance : boolean = false,
+        public crawlJob : string = '',
+        public newPgInstance : boolean = false,
+
+    ){}
 }
 
 @Controller('/pipe-line/transfer')
 @ApiTags('Crawl Pipeline')
-export class ConferenceCrawlController {
+export class TransferCrawlController {
     constructor(
         private readonly conferenceAdapterService: ConferenceAdapterService,
-        private readonly conferenceService: ConferenceService,
-        private readonly sourceService: SourceService,
-        private readonly rankService: RankService,
-        private readonly jobAdapterService : JobAdapterService,
+        private conferenceService : ConferenceService,
+        private rankService : RankService,
+        private sourceService : SourceService,
+        private fieldOfReasearchService : FieldOfResearchService,
+        private conferenceRankFootPrintService : ConferenceRankFootPrintsService,
+        private callForPaperService : CallForPaperService,
+        private jobAdapterService : JobAdapterService
     ){}
 
     @Get()
@@ -39,71 +49,73 @@ export class ConferenceCrawlController {
     }
 
     @Post('/import')
-    @Transactional()
     @ApiOperation({ summary: 'Import conference for job work' })
     @ApiResponse({ status: HttpStatus.CREATED, type: ResponseMessage })
-    public async importConference(@Body(ConferenceAdapterPipe) input :ConferenceAdapterInput ): Promise<{message : string}> {
+    @Transactional()
+    public async importConference(@Body(ConferenceAdapterPipe) input :ConferenceAdapterInput ): Promise<ResponseMessage> {
         // check for exists conference in the database;
-        let newConference;
-        let newSourceRank;
-        let newSource; 
-        let newJob ;
-        let newConferenceAdapter; 
-        let existsSourceRank ;
-        let existsSource;
-        let existsConferences = await this.conferenceService.findOneWithRankFootprints({
-            acronym : input.Acronym, 
-            name : input.Title,
-        } as ConferenceData);
+        const existsConference = await this.conferenceService.findOrCreate({
+            name : input.Title , 
+            acronym : input.Acronym,
+        })
+        const existsSource = await this.sourceService.findOrCreate({
+            name : input.Source, 
+            link : "",
+        })
+        const existsRank = await this.rankService.createOrFindRankOfSource({
+            source_id : existsSource.id,
+            rank : input.Rank,
+            value :  new Decimal(0),
+        })
 
+        await input.PrimaryFoR.forEach(async field => {
+            field = `${field}`.trim();
+            const existForGroup = await this.fieldOfReasearchService.findOrCreateGroup({
+                 code : field ,
+                 name : "unknown"
+            })
 
-        if (!existsConferences){
-            newConference = await this.conferenceService.create({
-                acronym : input.Acronym,
-                name : input.Title,
-            } as ConferenceData);
+            console.log("Conference in", existsConference.data.acronym)
+
+            await this.conferenceRankFootPrintService.findOrCreate({
+                conference_id : existsConference.data.id,
+                rank_id : existsRank.id,
+                year : new Decimal(parseInt(input.Source.slice(-4) as string)) ,
+                for_id : existForGroup.id
+            })
+        })
+
+        const existsCfp = await this.callForPaperService.find({
+            conference_id : existsConference.data.id,
+            status : true
+
+        } as CallForPaperData) as CallForPaperData[];
+
+        
+        if (existsCfp.length !== 0) {
+            return {message : 'Nothing change'} as ResponseMessage;
         }
 
-        existsSource = await this.sourceService.findOne({
-            name : input.Source
-        } as SourceData);
+        await this.callForPaperService.create({
+            conference_id : existsConference.data.id,
+            status : true
+        } as CallForPaperData);
+        
 
-        if(!existsSource) {
-            newSource = await this.sourceService.create({name : input.Source} as SourceInput) as SourceData;
-            existsSource = newSource;
+        const conferenceAdapter = await this.conferenceAdapterService.create(input);
+        
+        const job = await this.jobAdapterService.create({
+            conf_id : conferenceAdapter._id,
+            type : "import conference",
+            status : "pending"
+        } as JobAdapterData)
+        
+        return{
+            message : "Mode 2.0",
+            newMongoInstance : true,
+            crawlJob : job._id,
+            newPgInstance : false
         }
-        else {
-            existsSourceRank = await this.rankService.findRankOfSource({
-                source_id : existsSource.id,
-                rank : input.Rank,
-            } as SourceRanksData);
-        }
-
-        if(!existsSourceRank) {
-            newSourceRank = 
-            await this.rankService.createRankOfSource(
-                {source_id : existsSource.id, rank : input.Rank, value : new Decimal(0) } as SourceRanksInput
-            );
-        }
-
-        if(newConference || newSourceRank || newSource) {
-            newConferenceAdapter = await this.conferenceAdapterService.create(input);
-        }
-
-        // if exists confernce , not have source , mode 1 
-        // if exists conference, 
-        if(newConferenceAdapter) {
-            newJob = await this.jobAdapterService.create({
-                conf_id : newConferenceAdapter.Id,
-                type : 'import conference',
-                status : 'pending',
-            } as JobAdapterInput);
-        }
-
-        if (newJob) {
-            return {message : 'Import conference success'};
-        }
-        return {message : 'Nothing change'};
     }
 }
 

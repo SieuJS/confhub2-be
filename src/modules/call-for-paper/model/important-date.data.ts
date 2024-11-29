@@ -22,5 +22,4 @@ export class ImportantDateData {
         this.status = entity.status;
         this.cfp_id = entity.cfp_id;
     }
-
 }

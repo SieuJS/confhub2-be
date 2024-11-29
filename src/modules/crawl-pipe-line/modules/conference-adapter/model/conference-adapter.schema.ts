@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 
+
 export const ConferenceAdapterSchema = new mongoose.Schema({
     Title: {
         type: String,
@@ -40,6 +41,7 @@ export const ConferenceAdapterSchema = new mongoose.Schema({
     },
     SubmissonDate: {
         type: Array
+
     },
     NotificationDate: {
         type: Array

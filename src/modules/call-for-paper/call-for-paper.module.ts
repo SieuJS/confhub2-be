@@ -6,6 +6,7 @@ import { CallForPaperService } from './call-for-paper.service';
 @Module({
   imports : [CommonModule],
   controllers: [CallForPaperController],
-  providers: [CallForPaperService]
+  providers: [CallForPaperService],
+  exports : [CallForPaperService]
 })
 export class CallForPaperModule {}

@@ -13,6 +13,8 @@ model conferences {
   acronym                    String?
   call_for_papers            call_for_papers[]
   conference_rank_footprints conference_rank_footprints[]
+
+  @@unique([name, acronym])
 }
 
 model important_dates {
@@ -50,7 +52,7 @@ model journals {
 
 model sources {
   id           String         @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
-  name         String?
+  name         String?        @unique
   link         String?
   source_ranks source_ranks[]
 }
@@ -72,6 +74,7 @@ model call_for_papers {
   conferences     conferences?      @relation(fields: [conference_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_belong_conference")
   important_dates important_dates[]
   rank_of_cfp     rank_of_cfp[]
+  @@unique([conference_id, start_date, end_date])
 }
 
 model conference_rank_footprints {
@@ -83,6 +86,8 @@ model conference_rank_footprints {
   conferences     conferences?  @relation(fields: [conference_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_conference_rank_footprints")
   for_group       for_group?    @relation(fields: [for_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_conference_rank_footprints_for")
   ranks_of_source source_ranks? @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_conference")
+
+  @@unique([conference_id, rank_id, for_id, year])
 }
 
 model rank_of_cfp {
@@ -90,23 +95,26 @@ model rank_of_cfp {
   rank_id         String?          @db.Uuid
   cfp_id          String?          @db.Uuid
   year            Decimal?         @db.Decimal
+  for_group_id    String?          @db.Uuid
   call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_has_rank")
   ranks_of_source source_ranks?    @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_cfp")
+  for_group for_group ? @relation(fields: [for_group_id], references: [id],onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_cfp_for_group")
 }
 
 model for_division {
   id        String      @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
-  code      String?     @unique @db.VarChar(2)
+  code      String?     @unique @db.VarChar(3)
   name      String?
   for_group for_group[]
 }
 
 model for_group {
   id                         String                       @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
-  code                       String?                      @unique @db.VarChar(4)
+  code                       String?                      @unique @db.VarChar(8)
   name                       String?
   division_id                String?                      @db.Uuid
   conference_rank_footprints conference_rank_footprints[]
+  rank_of_cfp                rank_of_cfp[]
   for_division               for_division?                @relation(fields: [division_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_for_group_of_division")
   journal_rank_footprints    journal_rank_footprints[]
 }
@@ -120,6 +128,8 @@ model source_ranks {
   journal_rank_footprints    journal_rank_footprints[]
   rank_of_cfp                rank_of_cfp[]
   sources                    sources?                     @relation(fields: [source_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_source")
+
+  @@unique([source_id, rank])
 }
 
 model crawl_jobs {

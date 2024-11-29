@@ -3,7 +3,7 @@ import { TerminusModule } from '@nestjs/terminus';
 
 import { HealthController } from './controller';
 import { LogInterceptor } from './flow';
-import { configProvider, LoggerService, PrismaService } from './provider';
+import { configProvider, LoggerService, PrismaService, ConfigService } from './provider';
 
 @Module({
     imports: [
@@ -13,13 +13,15 @@ import { configProvider, LoggerService, PrismaService } from './provider';
         configProvider,
         LoggerService,
         LogInterceptor,
-        PrismaService
+        PrismaService,
+        ConfigService
     ],
     exports: [
         configProvider,
         LoggerService,
         LogInterceptor,
-        PrismaService
+        PrismaService,
+        ConfigService
     ],
     controllers: [
         HealthController
