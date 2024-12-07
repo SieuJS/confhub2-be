@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query } from '@nestjs/common';
-
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {Config, LoggerService} from '../../common';
 
 import {Service} from '../../tokens';
@@ -8,7 +8,6 @@ import { ConferencePipe } from '../flow/conference.pipe';
 import { ConferenceData, ConferenceInput, ConferenceWithCfpsRankFootprintsPaginateData} from '../model';
 
 import { ConferenceService } from '../service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 
 @Controller('conference')
@@ -18,7 +17,7 @@ export class ConferenceController {
         @Inject(Service.CONFIG)
         private readonly config: Config,
         private readonly logger: LoggerService,
-        private readonly conferenceService: ConferenceService 
+        private readonly conferenceService: ConferenceService
     ){}
 
     @Get()
@@ -26,9 +25,9 @@ export class ConferenceController {
     public async find(@Query () {
         where , orderBy, pagination
     } : {
-        where?: ConferenceData,
-        orderBy?: { [key: string]: 'asc' | 'desc' },
-        pagination?: { page: number, perPage: number }
+        where?: ConferenceData;
+        orderBy?: { [key: string]: 'asc' | 'desc' };
+        pagination?: { page: number; perPage: number };
     }): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
         return this.conferenceService.find({where, orderBy, pagination} );
     }

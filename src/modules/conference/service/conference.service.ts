@@ -1,16 +1,17 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../common';
-import { ConferenceData, ConferenceInput } from '../model';
 import {TransactionHost} from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-
 import {  getPaginatedResult } from '@nodeteam/nestjs-prisma-pagination';
+import { CallForPaperData } from '../../call-for-paper';
 
+import { PatternSearchCfpQuery } from '../../call-for-paper/query';
+
+import { PrismaService } from '../../common';
+import { ConferenceData, ConferenceInput } from '../model';
 import { ConferenceWithCfpsRankFootprintsData, ConferenceWithCfpsRankFootprintsPaginateData } from '../model';
 
 import { IncludeConferenceQuery } from '../query';
-import { PatternSearchCfpQuery } from '../../call-for-paper/query';
-import { CallForPaperData } from '../../call-for-paper';
 
 
 @Injectable()
@@ -21,11 +22,11 @@ export class ConferenceService {
     ) {}
 
     public async find({
-        where , orderBy, pagination
+        where , orderBy
     } : {
-        where?: ConferenceData,
-        orderBy?: { [key: string]: 'asc' | 'desc' },
-        pagination?: { page: number, perPage: number }
+        where?: ConferenceData;
+        orderBy?: { [key: string]: 'asc' | 'desc' };
+        pagination?: { page: number; perPage: number };
     } ): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
 
         const conferences = await this.prismaService.conferences.findMany({
@@ -35,7 +36,7 @@ export class ConferenceService {
             orderBy : {
                 ...orderBy
             },
-            include : 
+            include :
                 IncludeConferenceQuery,
         }) ;
 
@@ -46,7 +47,7 @@ export class ConferenceService {
                 perPage : 10,
                 skip : 0,
             }
-        } )
+        } );
     }
 
     public async search(    filter: CallForPaperData & {
@@ -71,7 +72,7 @@ export class ConferenceService {
                 }
             },
             include : IncludeConferenceQuery
-        })
+        });
 
         return conferences;
     }
@@ -86,12 +87,11 @@ export class ConferenceService {
         return new ConferenceData(conference as ConferenceData);
     }
 
-   
     public async create(data: ConferenceInput): Promise<ConferenceData> {
         return this.txHost.tx.conferences.create({data});
     }
 
-    public async findOrCreate(input: ConferenceInput): Promise<{isExisted : boolean, data : ConferenceData}> {
+    public async findOrCreate(input: ConferenceInput): Promise<{isExisted : boolean; data : ConferenceData}> {
         const existConference = await this.txHost.tx.conferences.findUnique({
             where: {
                 name_acronym: {

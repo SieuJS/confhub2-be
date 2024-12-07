@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { FoRGroupWithDivisionData } from "../../../field-of-research/model";
-import { RankWithSourceData } from "../../../rank-source";
-import { ConferenceRankFootPrintData } from "../conference-rank-footprint.data";
+import { ApiProperty } from '@nestjs/swagger';
+import { FoRGroupWithDivisionData } from '../../../field-of-research/model';
+import { RankWithSourceData } from '../../../rank-source';
+import { ConferenceRankFootPrintData } from '../conference-rank-footprint.data';
 
 export class ConferenceRankFootPrintWithRanksData extends ConferenceRankFootPrintData {
 
