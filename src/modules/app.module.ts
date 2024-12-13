@@ -14,6 +14,7 @@ import { CrawlPipeLineModule } from './crawl-pipe-line';
 import { PrismaService } from './common';
 import { FieldOfResearchModule } from './field-of-research/field-of-research.module';
 import { ViewModule } from './view/view.module';
+import { PaginateModule } from './paginate/paginate.module';
 
 @Module({
     imports: [
@@ -44,6 +45,7 @@ import { ViewModule } from './view/view.module';
         CrawlPipeLineModule,
         FieldOfResearchModule,
         ViewModule,
+        PaginateModule,
     ],
 })
 export class ApplicationModule {}
