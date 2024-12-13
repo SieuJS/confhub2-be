@@ -72,7 +72,7 @@ async function bootstrap(): Promise<void> {
     app.setViewEngine('hbs');
     // @todo Enable Helmet for better API security headers
 
-    app.setGlobalPrefix(process.env.API_PREFIX || API_DEFAULT_PREFIX , { exclude: ['view/(.*)'] });
+    app.setGlobalPrefix(process.env.API_PREFIX || API_DEFAULT_PREFIX , { exclude: [ '/home','view/(.*)' , '/browse'] });
 
     if (!process.env.SWAGGER_ENABLE || process.env.SWAGGER_ENABLE === '1') {
         createSwagger(app);
