@@ -9,7 +9,7 @@ import {Transactional} from '@nestjs-cls/transactional';
 import { Decimal } from '@prisma/client/runtime/library';
 
 import { CallForPaperData, CallForPaperService } from '../../call-for-paper';
-import { ConferenceRankFootPrintsService, ConferenceService } from '../../conference';
+import { ConferenceInput, ConferenceRankFootPrintsService, ConferenceService } from '../../conference';
 import { FieldOfResearchService } from '../../field-of-research/service';
 import {  RankService, SourceService } from '../../rank-source';
 import { ConferenceAdapterService, ConferenceAdapterData, ConferenceAdapterInput, JobAdapterData } from '../modules';
@@ -64,7 +64,7 @@ export class TransferCrawlController {
         const existsConference = await this.conferenceService.findOrCreate({
             name : input.Title ,
             acronym : input.Acronym,
-        });
+        } as ConferenceInput);
         const existsSource = await this.sourceService.findOrCreate({
             name : input.Source,
             link : '',

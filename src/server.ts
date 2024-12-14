@@ -6,6 +6,7 @@ import { ApplicationModule } from './modules/app.module';
 import { CommonModule, LogInterceptor } from './modules/common';
 import { join } from 'path';
 import * as hbs from 'express-handlebars'
+import { renderConferenceItem } from './views/helpers/renderConferenceItem';
 /**
  * These are API defaults that can be changed using environment variables,
  * it is not required to change them (see the `.env.example` file)
@@ -66,7 +67,7 @@ async function bootstrap(): Promise<void> {
           defaultLayout: 'layout_main',
           layoutsDir: join(__dirname, '..', 'src/views', 'layouts'),
           partialsDir: join(__dirname, '..', 'src/views', 'partials'),
-          helpers : {}
+          helpers : {renderConferenceItem}
         }).engine,
       );
     app.setViewEngine('hbs');

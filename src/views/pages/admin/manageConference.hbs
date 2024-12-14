@@ -25,7 +25,7 @@
                                 <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv"
                                     required>
                             </div>
-                            <button type="submit" class="btn btn-primary" id = "preview-btn">Submit</button>
+                            <button type="submit" class="btn btn-primary py-2" id="submit-btn">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -44,6 +44,7 @@
                                     <th>Source</th>
                                     <th>Rank</th>
                                     <th>Field Of Research</th>
+                                    <th>Process</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,7 +63,6 @@
         </div>
     </div>
 
-
     <script>
         document.getElementById('csvFile').addEventListener('change', function(event) {
             const fileInput = event.target;
@@ -71,7 +71,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const csv = e.target.result;
-                    const rows = csv.split('\n');
+                    let rows = csv.split('\n');
                     const tableBody = document.querySelector('#csvPreview tbody');
                     const pagination = document.getElementById('pagination');
                     const rowsPerPage = 5;
@@ -106,14 +106,17 @@
                             const tr = document.createElement('tr');
                             const title = cols[0];
                             const acronym = cols[1];
-                            const source = cols[3];
-                            const rank = cols[4];
+                            const source = cols[2];
+                            const rank = cols[3];
                             const fieldOfResearch = cols.slice(5).join(',');
                             [title, acronym, source, rank, fieldOfResearch].forEach(col => {
                                 const td = document.createElement('td');
                                 td.textContent = col;
                                 tr.appendChild(td);
                             });
+                            const processTd = document.createElement('td');
+                            processTd.textContent = 'Waiting';
+                            tr.appendChild(processTd);
                             tableBody.appendChild(tr);
                         });
                     }
@@ -142,6 +145,58 @@
                 };
                 reader.readAsText(file);
             }
+        });
+
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const rows = document.querySelectorAll('#csvPreview tbody tr');
+            const submitButton = document.getElementById('submit-btn');
+            submitButton.disabled = true;
+
+            function processRow(row, index) {
+                return new Promise( async (resolve) => {
+                    const processTd = row.querySelector('td:last-child');
+                    processTd.innerHTML = '<span class="loader"></span>';
+                   
+                    const cols = row.querySelectorAll('td');
+                    const data = {
+                        name: cols[0].textContent,
+                        acronym: cols[1].textContent,
+                        source: cols[2].textContent,
+                        rank: cols[3].textContent,
+                        fieldOfResearches: cols[4].textContent
+                    };
+                    try {
+                        const response = await fetch('/api/v1/conference/to-crawl', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        if (response.ok) {
+                            processTd.textContent = 'Success';
+                        } else {
+                            processTd.textContent = 'Fail';
+                        }
+                        resolve();
+                    }
+                    catch(err) {
+                        processTd.textContent = 'Fail';
+                        resolve();
+                    }
+                });
+            }
+
+            async function processAllRows() {
+                for (let i = 0; i < rows.length; i++) {
+                    await processRow(rows[i], i);
+                }
+                submitButton.disabled = false;
+            }
+
+            processAllRows();
         });
     </script>
 </section>
