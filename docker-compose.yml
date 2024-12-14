@@ -1,21 +1,36 @@
-# THIS DOCKERFILE IS INTENDED FOR DEVELOPMENT ENVIRONMENTS
-# DO NOT USE THIS FOR PRODUCTION USAGES.
-
 version: '3'
 
 services:
-  postgresql:
-    image: docker.io/bitnami/postgresql:16
+  nestjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - '5432:5432'
+      - '3000:3000'
     volumes:
-      - 'postgresql_data:/bitnami/postgresql'
+      - '.:/app'
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - POSTGRESQL_DATABASE=nestjs
-      - POSTGRESQL_USERNAME=nestjs
-      - POSTGRESQL_PASSWORD=password
+      - DB_HOST=db-postgresql-blr1-30615-do-user-17467981-0.m.db.ondigitalocean.com
+      - DB_PORT=25060
+      - DB_NAME_DEV=confhub-development
+      - DB_SCHEMA=confhub
+      - DB_DIALECT=postgres
+      - DB_NAME=confhub-development
+      - DB_USER=doadmin
+      - DB_PASSWORD=AVNS_TK6mL23WhT_WWMdxG7P
+      - DATABASE_URL=postgresql://doadmin:AVNS_TK6mL23WhT_WWMdxG7P@db-postgresql-blr1-30615-do-user-17467981-0.m.db.ondigitalocean.com:25060/confhub-development?confhub?sslmode=require?sslcert=certs/confhub.crt
+      - API_PORT=3000
+      - SWAGGER_ENABLE=1
+      - API_PREFIX=/api/v1
+      - JWT_SECRET=secret
+      - JWT_ISSUER=nestjs
+      - HEALTH_TOKEN=health
+      - PASSENGERS_ALLOWED=yes
+      - FIELD_CODE_LOADED=yes
+      - CONFERENCES_ALLOWED=yes
+    restart: always
+    networks:
+      - webnet
 
-volumes:
-  postgresql_data:
-    driver: local
+networks:
+  webnet:
