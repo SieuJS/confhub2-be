@@ -6,7 +6,7 @@ import { ApplicationModule } from './modules/app.module';
 import { CommonModule, LogInterceptor } from './modules/common';
 import { join } from 'path';
 import * as hbs from 'express-handlebars'
-import { renderConferenceItem } from './views/helpers/renderConferenceItem';
+import { renderConferenceItem } from './modules/view/helpers/renderConferenceItem';
 /**
  * These are API defaults that can be changed using environment variables,
  * it is not required to change them (see the `.env.example` file)
@@ -58,15 +58,15 @@ async function bootstrap(): Promise<void> {
     );
     app.enableCors();
     app.useStaticAssets(join(__dirname, '..', 'client'));
-    app.setBaseViewsDir(join(__dirname, '..', 'src/views'));
+    app.setBaseViewsDir(join(__dirname, '..', 'views'));
 
     app.engine(
         'hbs',
         hbs.create({
           extname: 'hbs',
           defaultLayout: 'layout_main',
-          layoutsDir: join(__dirname, '..', 'src/views', 'layouts'),
-          partialsDir: join(__dirname, '..', 'src/views', 'partials'),
+          layoutsDir: join(__dirname, '..', 'views', 'layouts'),
+          partialsDir: join(__dirname, '..', 'views', 'partials'),
           helpers : {renderConferenceItem}
         }).engine,
       );

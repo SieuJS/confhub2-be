@@ -18,7 +18,7 @@ services:
       - DB_NAME=confhub-development
       - DB_USER=doadmin
       - DB_PASSWORD=AVNS_TK6mL23WhT_WWMdxG7P
-      - DATABASE_URL=postgresql://doadmin:AVNS_TK6mL23WhT_WWMdxG7P@db-postgresql-blr1-30615-do-user-17467981-0.m.db.ondigitalocean.com:25060/confhub-development?confhub?sslmode=require?sslcert=certs/confhub.crt
+      - DATABASE_URL=postgresql://doadmin:AVNS_TK6mL23WhT_WWMdxG7P@db-postgresql-blr1-30615-do-user-17467981-0.m.db.ondigitalocean.com:25060/confhub-development?schema=confhub&sslmode=require?sslcert=confhub.crt
       - API_PORT=3000
       - SWAGGER_ENABLE=1
       - API_PREFIX=/api/v1

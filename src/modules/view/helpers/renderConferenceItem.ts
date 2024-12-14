@@ -1,5 +1,5 @@
 
-import { ConferenceWithCfpsRankFootprintsPaginateData } from "../../modules/conference";
+import { ConferenceWithCfpsRankFootprintsPaginateData } from "../../conference";
 
 export function renderConferenceItem(conferences: ConferenceWithCfpsRankFootprintsPaginateData) {
     return conferences.data.map(conference => {

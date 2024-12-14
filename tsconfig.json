@@ -17,7 +17,7 @@
   },
   "include": [
     "src/**/*", "**/*.ts"
-  ],
+, "views"  ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
