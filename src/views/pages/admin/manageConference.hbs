@@ -1,0 +1,147 @@
+<div class="hero-wrap hero-wrap-2" style="background-image: url('images/bg_1.jpg');"
+    data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+            <div class="col-md-12 ftco-animate text-center mb-5">
+                <p class="breadcrumbs mb-0"><span class="mr-3"><a href="index.html">Home <i
+                                class="ion-ios-arrow-forward"></i></a></span> <span>Post</span></p>
+                <h1 class="mb-3 bread">Import Conference</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Upload CSV File</div>
+                    <div class="card-body">
+                        <form id="upload-form" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="csvFile">Choose CSV File</label>
+                                <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv"
+                                    required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id = "preview-btn">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">CSV Preview</div>
+                    <div class="card-body">
+                        <table class="table table-bordered" id="csvPreview">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Acronym</th>
+                                    <th>Source</th>
+                                    <th>Rank</th>
+                                    <th>Field Of Research</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Preview data will be inserted here -->
+                            </tbody>
+                        </table>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <!-- Pagination items will be inserted here -->
+                            </ul>
+                        </nav>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById('csvFile').addEventListener('change', function(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const csv = e.target.result;
+                    const rows = csv.split('\n');
+                    const tableBody = document.querySelector('#csvPreview tbody');
+                    const pagination = document.getElementById('pagination');
+                    const rowsPerPage = 5;
+                    let currentPage = 1;
+
+                    function parseCSVRow(row) {
+                        let cols = [];
+                        let inQuotes = false;
+                        let col = '';
+                        for (let i = 0; i < row.length; i++) {
+                            const char = row[i];
+                            if (char === '"') {
+                                inQuotes = !inQuotes;
+                            } else if (char === ',' && !inQuotes) {
+                                cols.push(col);
+                                col = '';
+                            } else {
+                                col += char;
+                            }
+                        }
+                        cols.push(col);
+                        return cols.slice(1); // Skip the first column
+                    }
+
+                    function displayTablePage(page) {
+                        tableBody.innerHTML = '';
+                        const start = (page - 1) * rowsPerPage;
+                        const end = start + rowsPerPage;
+                        const pageRows = rows.slice(start, end);
+                        pageRows.forEach(row => {
+                            const cols = parseCSVRow(row);
+                            const tr = document.createElement('tr');
+                            const title = cols[0];
+                            const acronym = cols[1];
+                            const source = cols[3];
+                            const rank = cols[4];
+                            const fieldOfResearch = cols.slice(5).join(',');
+                            [title, acronym, source, rank, fieldOfResearch].forEach(col => {
+                                const td = document.createElement('td');
+                                td.textContent = col;
+                                tr.appendChild(td);
+                            });
+                            tableBody.appendChild(tr);
+                        });
+                    }
+
+                    function setupPagination() {
+                        pagination.innerHTML = '';
+                        const pageCount = Math.ceil(rows.length / rowsPerPage);
+                        for (let i = 1; i <= pageCount; i++) {
+                            const li = document.createElement('li');
+                            li.classList.add('page-item');
+                            const a = document.createElement('a');
+                            a.classList.add('page-link');
+                            a.href = '#';
+                            a.textContent = i;
+                            a.addEventListener('click', function(event) {
+                                event.preventDefault();
+                                currentPage = i;
+                                displayTablePage(currentPage);
+                            });
+                            li.appendChild(a);
+                            pagination.appendChild(li);
+                        }
+                    }
+                    displayTablePage(currentPage);
+                    setupPagination();
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</section>

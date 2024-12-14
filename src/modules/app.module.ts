@@ -10,7 +10,6 @@ import { CallForPaperModule } from './call-for-paper/call-for-paper.module';
 import { RankSourceModule } from './rank-source/rank-source.module';
 import { JournalModule } from './journal/journal.module';
 
-import { CrawlPipeLineModule } from './crawl-pipe-line';
 import { PrismaService } from './common';
 import { FieldOfResearchModule } from './field-of-research/field-of-research.module';
 import { ViewModule } from './view/view.module';
@@ -42,7 +41,6 @@ import { PaginateModule } from './paginate/paginate.module';
         CallForPaperModule,
         RankSourceModule,
         JournalModule,
-        CrawlPipeLineModule,
         FieldOfResearchModule,
         ViewModule,
         PaginateModule,

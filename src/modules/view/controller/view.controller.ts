@@ -8,11 +8,16 @@ export class ViewController  {
 
     @Get('/home')
     async root(@Res() res: Response) {
-        return res.render('home');
+        return res.render('pages/public/home');
     }
 
     @Get('/browse')
     async browse(@Res() res: Response) {
-        return res.render('browse');
+        return res.render('pages/public/browse');
+    }
+    
+    @Get('/post')
+    async post(@Res() res: Response) {
+        return res.render('pages/admin/manageConference');
     }
 }
