@@ -20,7 +20,7 @@ export class JobAdapterService {
 
     async getTotalJobsAndJobs(offset:number, size:number): Promise<{total: number, jobs: JobAdapterData[]}> {
         const total = await this.jobModel.countDocuments();
-        const jobs = await this.jobModel.find().skip(offset).limit(size);
+        const jobs = (await this.jobModel.find().skip(offset).limit(size)).map(job => new JobAdapterData(job));
         return {total, jobs};
     }
 }
