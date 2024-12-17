@@ -23,6 +23,7 @@ export const configProvider = {
             DB_HOST: Joi.string().required(),
             DB_PORT: Joi.number().required(),
             DB_NAME: Joi.string().required(),
+            DATABASE_URL: Joi.string().required(),
 
         });
 

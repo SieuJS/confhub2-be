@@ -23,5 +23,8 @@ export interface Config {
     readonly DB_NAME : string;
     readonly DB_SCHEMA : string;
 
+    readonly DATABASE_URL : string;
+    readonly DB_WATCHER : string;
+
     readonly FIELD_CODE_LOADED : string;
 }

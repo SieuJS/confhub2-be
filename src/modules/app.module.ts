@@ -15,6 +15,8 @@ import { FieldOfResearchModule } from './field-of-research/field-of-research.mod
 import { ViewModule } from './view/view.module';
 import { PaginateModule } from './paginate/paginate.module';
 import { CrawlApiModule } from './crawl-api/crawl-api.module';
+import { JobModule } from './job/job.module';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
     imports: [
@@ -46,6 +48,8 @@ import { CrawlApiModule } from './crawl-api/crawl-api.module';
         ViewModule,
         PaginateModule,
         CrawlApiModule,
+        JobModule,
+        SocketModule
     ],
 })
 export class ApplicationModule {}

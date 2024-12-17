@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
 // eslint-disable-next-line max-classes-per-file
-import { Controller, HttpStatus , Get, Post, Body} from '@nestjs/common';
+import { Controller, HttpStatus , Get, Post, Body, HttpException} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {Transactional} from '@nestjs-cls/transactional';
 
@@ -99,7 +99,7 @@ export class TransferCrawlController {
 
 
         if (existsCfp.length !== 0) {
-            return {message : 'Nothing change'} as ResponseMessage;
+            throw new HttpException('Conference already has CFP', HttpStatus.BAD_REQUEST);
         }
 
         await this.callForPaperService.create({

@@ -1,6 +1,6 @@
-CREATE SCHEMA IF NOT EXISTS confhub;
-set schema 'confhub';
-create extension if not exists "uuid-ossp";
+CREATE USER confhub IDENTIFIED BY password;
+GRANT CONNECT, RESOURCE TO confhub;
+ALTER SESSION SET CURRENT_SCHEMA = confhub;
 
 create table confhub.important_dates (
     "id" uuid primary key default uuid_generate_v4(),
@@ -159,13 +159,13 @@ BEGIN
     END IF;
     
     -- Send the notification to the specified channel
-    PERFORM pg_notify('table_change_channel', payload::text);
+    PERFORM pg_notify('crawl_job_change_channel', payload::text);
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER table_change_trigger
+CREATE OR REPLACE TRIGGER table_change_trigger
 AFTER INSERT OR UPDATE OR DELETE
-ON crawl_jobs
+ON confhub.crawl_jobs
 FOR EACH ROW
 EXECUTE FUNCTION notify_table_change();

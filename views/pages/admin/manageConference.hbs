@@ -63,6 +63,52 @@
         </div>
     </div>
 
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-migrate-3.0.1.min.js"></script>
+
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+	<script>
+        let socket ;
+		$(document).ready(function() {
+			socket = io.connect();
+
+			socket.on('connect', function() {
+				console.log('Connected to the server');
+			});
+
+			socket.on('message', function(data) {
+				console.log('Message from server:', data);
+			});
+
+			// Example of sending a message to the server
+			socket.emit('message', { text: 'Hello, server!' });
+
+			socket.on('job_update', function(data) {
+                const rows = document.querySelectorAll('#csvPreview tbody tr');
+                rows.forEach(row => {
+                    const cols = row.querySelectorAll('td');
+                    if (row.getAttribute('data-id') === data.id) {
+                        if(data.status === 'FAILED'){
+                            const processTd = cols[cols.length - 1];
+                            processTd.textContent = 'Fail';
+                            return;
+                        }
+                        if(data.status === 'SUCCESS'){
+                            const processTd = cols[cols.length - 1];
+                            processTd.textContent = 'Success';
+                            return;
+                        }
+                        const processTd = cols[cols.length - 1];
+                        processTd.innerHTML = `<div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: ${data.progress_percent}%;" aria-valuenow="${data.progress_percent}" aria-valuemin="0" aria-valuemax="100">${data.progress_percent}%</div>
+                        </div>`;
+                    }
+                });
+				console.log('Job update:', data);
+			});
+		});
+	</script>
+
     <script>
         document.getElementById('csvFile').addEventListener('change', function(event) {
             const fileInput = event.target;
@@ -174,9 +220,17 @@
                             },
                             body: JSON.stringify(data)
                         });
-
+                        
                         if (response.ok) {
-                            processTd.textContent = 'Success';
+                            processTd.textContent = 'Prepare to crawl';
+                            const result = await response.json();
+                            if(!result.job_id){
+                                processTd.textContent = 'This conference already exists';
+                                resolve();
+                                return;
+                            }
+                            row.setAttribute('data-id', result.job_id);
+                            socket.emit('job', result.job_id);
                         } else {
                             processTd.textContent = 'Fail';
                         }
@@ -200,3 +254,4 @@
         });
     </script>
 </section>
+

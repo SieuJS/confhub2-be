@@ -110,4 +110,12 @@ export class ConferenceService {
             return {isExisted: false, data: conference};
         }
     }
+
+    public async findById (id: string): Promise<ConferenceData | null> {
+        return this.prismaService.conferences.findUnique({
+            where : {
+                id : id
+            }
+        }) 
+    }
 }

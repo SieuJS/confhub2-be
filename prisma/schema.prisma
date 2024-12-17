@@ -136,13 +136,14 @@ model source_ranks {
 model crawl_jobs {
   id               String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
   conference_id    String?
-  type             String?
+  type             String? 
   progress_percent Int?
   progress_detail  String?
   duration         Int?
   status           String?
   created_at       DateTime? @db.Timestamp(6)
   updated_at       DateTime? @db.Timestamp(6)
+  watchers         job_watchers[]
 }
 
 model error_conferences {
@@ -152,4 +153,13 @@ model error_conferences {
   conference_id String?   @db.Uuid
   created_at    DateTime? @db.Timestamp(6)
   updated_at    DateTime? @db.Timestamp(6)
+}
+
+
+model job_watchers {
+  id String @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  socket_id String
+  job_id String @db.Uuid 
+  jobs crawl_jobs @relation(fields: [job_id], references: [id], onDelete: NoAction, onUpdate: NoAction ,map: "fk_job_watchers_sign_job")
+  @@unique([socket_id, job_id])
 }

@@ -6,8 +6,9 @@ import { CrawlApiModule } from '../crawl-api/crawl-api.module';
 import { RankSourceModule } from '../rank-source';
 import { CallForPaperModule } from '../call-for-paper';
 import { FieldOfResearchModule } from '../field-of-research/field-of-research.module';
+import { JobModule } from '../job/job.module';
 @Module({
-  imports: [CommonModule, CrawlApiModule, RankSourceModule, CallForPaperModule, FieldOfResearchModule],
+  imports: [CommonModule, CrawlApiModule, RankSourceModule, CallForPaperModule, FieldOfResearchModule, JobModule],
   controllers: [ConferenceController],
   providers: [ConferenceService , ConferenceRankFootPrintsService],
   exports : [ConferenceService, ConferenceRankFootPrintsService]

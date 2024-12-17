@@ -1,6 +1,7 @@
 export function splitDateRange(dateRange: string): { startDate: string; endDate: string } {
+    console.log("Splitting date range:", dateRange);
     // Split the input range into start and end parts
-    const [start, end] = dateRange.split('–').map(part => part.trim());
+    const [start, end] = dateRange.split('-').map(part => part.trim());
 
     // Extract the year from the range
     const yearMatch = end.match(/\d{4}$/); // Matches the year in the end part

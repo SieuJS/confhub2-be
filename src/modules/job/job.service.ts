@@ -4,9 +4,13 @@ import { PrismaService } from '../common';
 import { CrawlJobData } from '../job/model';
 import { CrawlJobInput } from '../job/model';
 
+
 @Injectable()
 export class JobService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+
+    ) {}
 
     public async createJob(data: CrawlJobInput): Promise<CrawlJobData> {
         const crawlJob = await this.prisma.crawl_jobs.create({data});
@@ -23,4 +27,11 @@ export class JobService {
         const crawlJob = await this.prisma.crawl_jobs.update({where: {id}, data});
         return new CrawlJobData(crawlJob);
     }
+
+    public async deleteJob(id: string): Promise<CrawlJobData> {
+        const crawlJob = await this.prisma.crawl_jobs.delete({where: {id}});
+        return new CrawlJobData(crawlJob);
+    }
+
+
 }
