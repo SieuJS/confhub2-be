@@ -1,1 +1,1 @@
-export * from './field-of-researc.controller';
+export * from './field-of-research.controller'

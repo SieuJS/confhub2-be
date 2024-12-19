@@ -85,19 +85,16 @@ export class FieldOfResearchService {
         return group as FoRGroupData;
     }
 
-    async findDivision(filter: FoRDivisionData): Promise<FoRDivisionData[]> {
+    async findDivision(filter: FoRDivisionData | null): Promise<FoRDivisionData[]> {
         const divisions = await this.prismaService.for_division.findMany({
-            where: filter,
-            include : {
-                for_group : true
-            }
+            where: filter as FoRDivisionData
         });
         return divisions as FoRDivisionData[];
     }
 
-    async findGroup(filter: FoRGroupData): Promise<FoRGroupData[]> {
+    async findGroup(filter: FoRGroupData | null): Promise<FoRGroupData[]> {
         const groups = await this.prismaService.for_group.findMany({
-            where: filter
+            where: filter as FoRGroupData
         });
         return groups as FoRGroupData[];
     }

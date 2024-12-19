@@ -8,7 +8,7 @@ import { CallForPaperData } from '../../call-for-paper';
 import { PatternSearchCfpQuery } from '../../call-for-paper/query';
 
 import { PrismaService } from '../../common';
-import { ConferenceData, ConferenceInput } from '../model';
+import { ConferenceData, ConferenceFilter, ConferenceInput } from '../model';
 import { ConferenceWithCfpsRankFootprintsData, ConferenceWithCfpsRankFootprintsPaginateData } from '../model';
 
 import { IncludeConferenceQuery } from '../query';
@@ -22,16 +22,70 @@ export class ConferenceService {
     ) {}
 
     public async find({
-        where , orderBy
+        filter, orderBy, pagination
     } : {
-        where?: ConferenceData;
+        filter?: ConferenceFilter;
         orderBy?: { [key: string]: 'asc' | 'desc' };
         pagination?: { page: number; perPage: number };
     } ): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
-
+        console.log('filter', filter);
         const conferences = await this.prismaService.conferences.findMany({
             where : {
-                ...where
+                AND : [
+                    {
+                        name : {
+                            contains : filter?.name as string,
+                            mode : 'insensitive'
+                        }
+                    },
+                    {
+                        acronym : {
+                            contains : filter?.acronym as string,
+                            mode : 'insensitive'
+                        }
+                    },
+                    {
+                        conference_rank_footprints : {
+                            some : {
+                                ranks_of_source : {
+                                    AND : [
+                                        {
+                                            rank : {
+                                                contains : filter?.rank as string,
+                                                mode : 'insensitive'
+                                            }
+                                        },
+                                        {
+                                            sources : {
+                                                name : {
+                                                    contains : filter?.source as string,
+                                                    mode : 'insensitive'
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }, {
+                        call_for_papers : {
+                            some : {
+                                AND : [
+                                    ...(filter?.fromDate ? [{start_date : {gte : filter.fromDate}}] : []),
+                                    ...(filter?.toDate ? [{end_date : {lte : filter.toDate}}] : []),
+                                    
+                                    {
+                                        location : {
+                                            contains : filter?.location as string,
+                                            mode : 'insensitive'
+                                        }
+                                    }
+                                ],
+                                
+                            }
+                        }
+                    }
+                ]
             },
             orderBy : {
                 ...orderBy
@@ -50,7 +104,7 @@ export class ConferenceService {
         } );
     }
 
-    public async search(    filter: CallForPaperData & {
+    public async search(  filter: CallForPaperData & {
         start_date_range: {
             gte: Date;
             lte: Date;
@@ -118,4 +172,6 @@ export class ConferenceService {
             }
         }) 
     }
+
+
 }

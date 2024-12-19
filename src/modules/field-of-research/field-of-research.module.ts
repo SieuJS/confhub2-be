@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CommonModule } from '../common';
-import { FieldOfResearchService } from './service/for.service';
+import { FieldOfResearchService } from './service/field-of-research.service';
 import { FieldOfResearchController } from './controller';
 
 @Module({

@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {Config, LoggerService} from '../../common';
 
 import {Service} from '../../tokens';
@@ -7,7 +7,7 @@ import { SourceService, RankService } from '../../rank-source';
 import { CallForPaperService } from '../../call-for-paper';
 import { FieldOfResearchService } from '../../field-of-research/service';
 import { ConferencePipe } from '../flow/conference.pipe';
-import { ConferenceData, ConferenceInput, ConferenceWithCfpsRankFootprintsPaginateData} from '../model';
+import { ConferenceData, ConferenceFilter, ConferenceInput, ConferenceWithCfpsRankFootprintsPaginateData} from '../model';
 import { ConferenceService } from '../service';
 import { ConferenceRankFootPrintsService } from '../service';
 import { CallForPaperData } from '../../call-for-paper';
@@ -33,15 +33,22 @@ export class ConferenceController {
     ){}
 
     @Get()
+    @ApiQuery({name : 'fromDate', type : 'string', required : false})
+    @ApiQuery({name : 'toDate', type : 'string', required : false})
+    @ApiQuery({name : 'location', type : 'string', required : false})
+    @ApiQuery({name : 'name', type : 'string', required : false})
+    @ApiQuery({name : 'acronym', type : 'string', required : false})
+    @ApiQuery({name : 'source', type : 'string', required : false})
+    @ApiQuery({name : 'rank', type : 'string', required : false})
     @ApiResponse({ status: HttpStatus.OK, type : ConferenceWithCfpsRankFootprintsPaginateData })
-    public async find(@Query () {
-        where , orderBy, pagination
+    public async find(@Query ()filter : ConferenceFilter , @Query() {
+        orderBy, pagination
     } : {
-        where?: ConferenceData;
+        filter?: ConferenceFilter;
         orderBy?: { [key: string]: 'asc' | 'desc' };
         pagination?: { page: number; perPage: number };
     }): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
-        return this.conferenceService.find({where, orderBy, pagination} );
+        return this.conferenceService.find({filter, orderBy, pagination} );
     }
 
     @Post()
@@ -114,5 +121,12 @@ export class ConferenceController {
             message : "Conference created to crawl",
             job_id : job.id
         }
+    }
+
+    @Get('/search')
+    @ApiResponse({ status: HttpStatus.OK, type : ConferenceWithCfpsRankFootprintsPaginateData, isArray : true })
+
+    public async search(@Query() filter: ConferenceFilter ) {
+        return filter;
     }
 }

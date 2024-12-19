@@ -23,39 +23,11 @@
                             {{!-- Category search group --}}
                             <div class="row col-sm-12 col-lg-6 m-0 mb-2">
                                 <div class="col-6 m-0 pl-0">
-                                    <div class="form-group">
-                                        <div class="form-field">
-                                            <div class="select-wrap">
-                                                <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                                <select name="" id="" class="form-control">
-                                                    <option value="">All subject areas</option>
-                                                    <option value="">Full Time</option>
-                                                    <option value="">Part Time</option>
-                                                    <option value="">Freelance</option>
-                                                    <option value="">Internship</option>
-                                                    <option value="">Temporary</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {{#renderForDivForm forDivisions}}{{/renderForDivForm}}
                                 </div>
 
                                 <div class="col-6 m-0 pl-0">
-                                    <div class="form-group">
-                                        <div class="form-field">
-                                            <div class="select-wrap">
-                                                <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                                <select name="" id="" class="form-control">
-                                                    <option value="">All subject categories</option>
-                                                    <option value="">Full Time</option>
-                                                    <option value="">Part Time</option>
-                                                    <option value="">Freelance</option>
-                                                    <option value="">Internship</option>
-                                                    <option value="">Temporary</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {{#renderForGroupForm forGroups}}{{/renderForGroupForm}}
                                 </div>
 
                             </div>
@@ -162,7 +134,7 @@
                                     <div class="form-field">
                                         <div class="select-wrap">
                                             <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                            <select name="" id="" class="form-control">
+                                            <select name="" id="master-category" class="form-control">
                                                 <option value="">Category</option>
                                                 <option value="">Full Time</option>
                                                 <option value="">Part Time</option>

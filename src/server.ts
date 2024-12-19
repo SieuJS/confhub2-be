@@ -7,6 +7,7 @@ import { CommonModule, LogInterceptor } from './modules/common';
 import { join } from 'path';
 import * as hbs from 'express-handlebars'
 import { renderConferenceItem } from './modules/view/helpers/renderConferenceItem';
+import { renderForDivForm, renderForGroupForm } from './modules/view/helpers';
 /**
  * These are API defaults that can be changed using environment variables,
  * it is not required to change them (see the `.env.example` file)
@@ -67,13 +68,13 @@ async function bootstrap(): Promise<void> {
           defaultLayout: 'layout_main',
           layoutsDir: join(__dirname, '..', 'views', 'layouts'),
           partialsDir: join(__dirname, '..', 'views', 'partials'),
-          helpers : {renderConferenceItem}
+          helpers : {renderConferenceItem , renderForDivForm , renderForGroupForm}
         }).engine,
       );
     app.setViewEngine('hbs');
     // @todo Enable Helmet for better API security headers
 
-    app.setGlobalPrefix(process.env.API_PREFIX || API_DEFAULT_PREFIX , { exclude: [ '/home','view/(.*)' , '/browse' , '/post'] });
+    app.setGlobalPrefix(process.env.API_PREFIX || API_DEFAULT_PREFIX , { exclude: [ '/home','view/(.*)' , '/browse' , '/post', '/detail'] });
 
     if (!process.env.SWAGGER_ENABLE || process.env.SWAGGER_ENABLE === '1') {
         createSwagger(app);
