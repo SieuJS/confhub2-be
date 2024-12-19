@@ -1,8 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../common";
-import { ConferenceRankFootPrintData, ConferenceRankFootPrintInput } from "../model";
+import { Injectable } from '@nestjs/common';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import {TransactionHost} from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+
+import { PrismaService } from '../../common';
+import { ConferenceRankFootPrintData, ConferenceRankFootPrintInput } from '../model';
+
 
 @Injectable()
 export class ConferenceRankFootPrintsService {
@@ -29,14 +32,13 @@ export class ConferenceRankFootPrintsService {
         const footprint = await this.prismaService.conference_rank_footprints.findUnique ({
             where : {
                 conference_id_rank_id_for_id_year: {
-                    conference_id: input.conference_id as string,
-                    rank_id: input.rank_id as string,
-                    for_id: input.for_id as string,
-                    year: input.year 
+                    conference_id: input.conference_id,
+                    rank_id: input.rank_id,
+                    for_id: input.for_id,
+                    year: input.year
                 }
             }
-        })
-
+        });
         if(footprint) {
             return footprint as ConferenceRankFootPrintData;
         }

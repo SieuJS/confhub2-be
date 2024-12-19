@@ -1,12 +1,12 @@
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import {NestExpressApplication} from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
-
 import { ApplicationModule } from './modules/app.module';
 import { CommonModule, LogInterceptor } from './modules/common';
-
+import { join } from 'path';
+import * as hbs from 'express-handlebars'
+import { renderConferenceItem } from './modules/view/helpers/renderConferenceItem';
 /**
  * These are API defaults that can be changed using environment variables,
  * it is not required to change them (see the `.env.example` file)
@@ -53,15 +53,27 @@ function createSwagger(app: INestApplication) {
  */
 async function bootstrap(): Promise<void> {
 
-    const app = await NestFactory.create<NestFastifyApplication>(
-        ApplicationModule,
-        new FastifyAdapter()
+    const app = await NestFactory.create<NestExpressApplication>(
+        ApplicationModule
     );
     app.enableCors();
+    app.useStaticAssets(join(__dirname, '..', 'client'));
+    app.setBaseViewsDir(join(__dirname, '..', 'views'));
 
+    app.engine(
+        'hbs',
+        hbs.create({
+          extname: 'hbs',
+          defaultLayout: 'layout_main',
+          layoutsDir: join(__dirname, '..', 'views', 'layouts'),
+          partialsDir: join(__dirname, '..', 'views', 'partials'),
+          helpers : {renderConferenceItem}
+        }).engine,
+      );
+    app.setViewEngine('hbs');
     // @todo Enable Helmet for better API security headers
 
-    app.setGlobalPrefix(process.env.API_PREFIX || API_DEFAULT_PREFIX);
+    app.setGlobalPrefix(process.env.API_PREFIX || API_DEFAULT_PREFIX , { exclude: [ '/home','view/(.*)' , '/browse' , '/post'] });
 
     if (!process.env.SWAGGER_ENABLE || process.env.SWAGGER_ENABLE === '1') {
         createSwagger(app);

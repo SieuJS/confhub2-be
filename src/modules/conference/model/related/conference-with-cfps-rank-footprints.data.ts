@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { CfpWithImportantDatesData } from "../../../call-for-paper";
-import { ConferenceData } from "../conference.data";
-import { ConferenceRankFootPrintWithRanksData } from "./conference-rank-footprints-with-rank-source.data";
+import { ApiProperty } from '@nestjs/swagger';
+import { CfpWithImportantDatesData } from '../../../call-for-paper';
+import { ConferenceData } from '../conference.data';
+import { ConferenceRankFootPrintWithRanksData } from './conference-rank-footprints-with-rank-source.data';
 
 
 export class ConferenceWithCfpsRankFootprintsData extends ConferenceData {

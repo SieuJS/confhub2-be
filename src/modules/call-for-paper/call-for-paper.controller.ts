@@ -1,13 +1,14 @@
 import { Body, Controller, Get, HttpStatus,  Param,  Post, PreconditionFailedException, Query, ParseIntPipe, DefaultValuePipe} from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PaginatorTypes} from '@nodeteam/nestjs-prisma-pagination';
 import { CallForPaperService } from './call-for-paper.service';
 import { CallForPaperData, CallForPaperInput, ImportantDateData } from './model';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PaginatorTypes} from '@nodeteam/nestjs-prisma-pagination'; 
+
 @Controller('call-for-paper')
 @ApiTags('Call For Paper')
 export class CallForPaperController {
     public constructor (
-        private readonly callForPaperService: CallForPaperService 
+        private readonly callForPaperService: CallForPaperService
     ){
 
     }
@@ -15,7 +16,7 @@ export class CallForPaperController {
     @Get('/')
     @ApiOperation({ summary: 'Find call for papers' })
     @ApiQuery({name : 'status', required : false, type : Boolean})
-    @ApiResponse({ status: HttpStatus.OK, type: CallForPaperData }) 
+    @ApiResponse({ status: HttpStatus.OK, type: CallForPaperData })
     public async find(
         @Query('page',new DefaultValuePipe(1), ParseIntPipe) page : number,
         @Query('perPage',new DefaultValuePipe(3), ParseIntPipe) perPage : number,
@@ -38,7 +39,7 @@ export class CallForPaperController {
             return callForPaper;
         }catch(error) {
             // this.logger.error(`Error in creating call for papers ${error}`);
-            console.log(error);
+
             throw new PreconditionFailedException('Some error occured when create call for papers');
         }
     }
@@ -49,7 +50,7 @@ export class CallForPaperController {
     public async getCFPImportantdates(@Param('cfp_id') cfp_id: string): Promise<ImportantDateData[]> {
         return  this.callForPaperService.getCFPImportantdates(cfp_id);
     }
-    
+
     @Post(':cfp_id/important-dates')
     @ApiOperation({ summary: 'Add important dates of call for papers' })
     @ApiResponse({ status: HttpStatus.CREATED, type: ImportantDateData })
@@ -61,14 +62,13 @@ export class CallForPaperController {
             return importantDate;
         }catch(error) {
             // this.logger.error(`Error in creating call for papers ${error}`);
-            console.log(error);
             throw new PreconditionFailedException('Some error occured when create call for papers');
         }
     }
 
     @Get('/detailedCfp')
     @ApiOperation({ summary: 'Find all detailed call for papers' })
-    async getDetailedCallForPapers(){
+    public async getDetailedCallForPapers(){
         return this.callForPaperService.getDetailedCallForPapers({});
     }
 

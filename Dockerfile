@@ -19,7 +19,7 @@ ENV NODE_ENV build
 USER node
 WORKDIR /home/node
 
-COPY package*.json ./
+COPY package*.json ./ 
 RUN npm ci
 
 COPY --chown=node:node . .
@@ -31,13 +31,19 @@ RUN npx prisma generate \
 
 FROM node:20-alpine
 
+RUN apk update && \
+    apk add --no-cache openssl
+
 ENV NODE_ENV production
 
 USER node
+
 WORKDIR /home/node
 
-COPY --from=builder --chown=node:node /home/node/package*.json ./
+COPY --from=builder --chown=node:node /home/node/package*.json ./ 
 COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
 COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+COPY --from=builder --chown=node:node /home/node/client/ ./client/
+COPY --from=builder --chown=node:node /home/node/views/ ./views/
 
 CMD ["node", "dist/server.js"]
