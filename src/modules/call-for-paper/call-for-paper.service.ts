@@ -111,16 +111,12 @@ export class CallForPaperService {
     ): Promise<ImportantDateData[]> {
         const importantDates =
             await this.prismaService.important_dates.findMany({
-                include: {
-                    call_for_papers: true,
-                },
                 where: {
                     cfp_id,
                 },
             });
-        return importantDates.map(
-            (importantDate) => new ImportantDateData(importantDate)
-        );
+        return importantDates
+        ;
     }
 
     public async createCFPImportantdates(
@@ -129,9 +125,44 @@ export class CallForPaperService {
         const importantDate = await this.prismaService.important_dates.create({
             data: {
                 ...data,
-                date_value: new Date(data.date_value as string).toISOString(),
+                date_value: data.date_value,
             },
         });
         return new ImportantDateData(importantDate);
+    }
+
+    public async removeImportantDate(cfpId: string): Promise<void> {
+        await this.prismaService.important_dates.deleteMany({
+            where: {
+                cfp_id: cfpId,
+            },
+        });
+    }
+    
+    public async getMainCfp(
+        conference_id: string
+    ): Promise<CallForPaperData | null> {
+        const cfp = await this.prismaService.call_for_papers.findFirst({
+            where: {
+                conference_id,
+                status: true,
+            },
+        });
+        return cfp ? new CallForPaperData(cfp) : null;
+    }
+
+    public async updateCfp (
+        id: string,
+        data: CallForPaperInput
+    ): Promise<CallForPaperData> {
+        const cfp = await this.prismaService.call_for_papers.update({
+            where: {
+                id,
+            },
+            data: {
+                ...data,
+            },
+        });
+        return new CallForPaperData(cfp);
     }
 }

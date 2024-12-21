@@ -17,6 +17,15 @@ export interface ConferenceCrawlData  {
 export interface ConferenceCrawlInput {
     Title : string ;
     Acronym : string ;
+    Link? : string  ;
+}
+
+interface ParsedDates {
+    "Submission date": string[];
+    "Notification date": string[];
+    "Camera-ready date": string[];
+    "Registration date": string[];
+    "Others": string[];
 }
 
 

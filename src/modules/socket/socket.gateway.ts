@@ -77,7 +77,14 @@ export class SocketGateway  implements OnGatewayInit, OnGatewayConnection, OnGat
 
             if(payload.operation === 'INSERT' ) {
                 this.server.emit("table_change", payload);
-                await this.jobWatcherService.handleInsertJob(job);
+                if(job.type === 'CRAWL')
+                {
+                    await this.jobWatcherService.handleInsertJob(job);
+                }
+                if(job.type === 'UPDATE')
+                {
+                    await this.jobWatcherService.handleUpdateJob(job);
+                }
             }
 
             if (payload.operation === 'UPDATE') {
@@ -106,6 +113,7 @@ export class SocketGateway  implements OnGatewayInit, OnGatewayConnection, OnGat
 
         return "Received data: " + job;
     }
+
     // Handle cleanup on gateway shutdown
     async onModuleDestroy() {
         await this.pgClient.end(); // Clean up PostgreSQL client connection

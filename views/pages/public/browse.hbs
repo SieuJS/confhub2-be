@@ -7,6 +7,7 @@
                 <p class="breadcrumbs mb-0"><span class="mr-3"><a href="index.html">Home <i
                                 class="ion-ios-arrow-forward"></i></a></span> <span>About</span></p>
                 <h1 class="mb-3 bread">Browse Jobs</h1>
+                {{>shared/searchbar}}
             </div>
         </div>
     </div>
@@ -21,17 +22,10 @@
                 </div>
                 <div class="row mt-5">
                     <div class="col text-center">
-                        <div class="block-27">
-                            <ul>
-                                <li><a href="#">&lt;</a></li>
-                                <li class="active"><span>1</span></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
-                                <li><a href="#">&gt;</a></li>
-                            </ul>
-                        </div>
+                        {{#with data}} 
+                            {{#renderPagination meta}} {{/renderPagination}}
+                        {{/with}}
+                    
                     </div>
                 </div>
             </div>
@@ -105,3 +99,21 @@
         </div>
     </div>
 </section>
+
+
+<script >
+    const paginationButtons= document.querySelectorAll('.pagination-panel li a');
+    paginationButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            console.log('click')
+            e.preventDefault();
+            const page = e.target.getAttribute('data-page');
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(window.location.search);
+            params.set('page', page);
+            url.search = params.toString();
+            window.location.search = params.toString();
+        });
+    });
+    
+</script>

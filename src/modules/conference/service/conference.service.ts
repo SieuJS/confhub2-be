@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import {TransactionHost} from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import {  getPaginatedResult } from '@nodeteam/nestjs-prisma-pagination';
+import {   paginator, PaginatorTypes } from '@nodeteam/nestjs-prisma-pagination';
 import { CallForPaperData } from '../../call-for-paper';
 
 import { PatternSearchCfpQuery } from '../../call-for-paper/query';
@@ -12,8 +12,9 @@ import { ConferenceData, ConferenceFilter, ConferenceInput } from '../model';
 import { ConferenceWithCfpsRankFootprintsData, ConferenceWithCfpsRankFootprintsPaginateData } from '../model';
 
 import { IncludeConferenceQuery } from '../query';
+import { PaginationArgs } from '../../paginate';
 
-
+const paginate : PaginatorTypes.PaginateFunction = paginator({});
 @Injectable()
 export class ConferenceService {
     public constructor(
@@ -21,87 +22,150 @@ export class ConferenceService {
         private readonly txHost: TransactionHost<TransactionalAdapterPrisma>
     ) {}
 
-    public async find({
-        filter, orderBy, pagination
-    } : {
-        filter?: ConferenceFilter;
-        orderBy?: { [key: string]: 'asc' | 'desc' };
-        pagination?: { page: number; perPage: number };
-    } ): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
-        console.log('filter', filter);
-        const conferences = await this.prismaService.conferences.findMany({
+    public async find(where? : ConferenceFilter, paginationArgs? : PaginationArgs ): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
+        let conferences  : 
+        ConferenceWithCfpsRankFootprintsPaginateData;
+        console.log(where , paginationArgs);
+        this.prismaService.conferences.findMany({
             where : {
                 AND : [
                     {
-                        name : {
-                            contains : filter?.name as string,
-                            mode : 'insensitive'
-                        }
+                        OR : [
+                            {
+                                name : {
+                                    contains : where?.name as string,
+                                    mode : 'insensitive'
+                                },
+                            },
+                            {
+                                acronym : {
+                                    contains : where?.name as string,
+                                    mode : 'insensitive'
+                                }
+                            }
+                        ]
                     },
                     {
-                        acronym : {
-                            contains : filter?.acronym as string,
-                            mode : 'insensitive'
+                        call_for_papers : {
+                            some : {
+                                AND : [
+                                    {
+                                        ...(where?.fromDate ?{ start_date : {
+                                            gte : new Date(where?.fromDate as string)
+                                        }} : null)
+                                    },
+                                    {
+                                        ...(where?.toDate ? { end_date : {
+                                            lte : new Date(where?.toDate as string)
+                                        }} : null)
+                                    },
+                                    {
+                                        location : {
+                                            contains : where?.location as string,
+                                            mode : 'insensitive'
+                                        }
+                                    },
+                                ]
+                            }
                         }
                     },
                     {
                         conference_rank_footprints : {
                             some : {
                                 ranks_of_source : {
-                                    AND : [
-                                        {
-                                            rank : {
-                                                contains : filter?.rank as string,
-                                                mode : 'insensitive'
-                                            }
-                                        },
-                                        {
-                                            sources : {
-                                                name : {
-                                                    contains : filter?.source as string,
-                                                    mode : 'insensitive'
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    rank : {
+                                        contains : where?.rank as string,
+                                        mode : 'insensitive'
+                                    },
+                                    sources : {
+                                         name : {
+                                            contains : where?.source as string,
+                                            mode : 'insensitive'
+                                         }
+                                        
+                                    }
                                 }
                             }
                         }
-                    }, {
-                        call_for_papers : {
-                            some : {
-                                AND : [
-                                    ...(filter?.fromDate ? [{start_date : {gte : filter.fromDate}}] : []),
-                                    ...(filter?.toDate ? [{end_date : {lte : filter.toDate}}] : []),
-                                    
-                                    {
-                                        location : {
-                                            contains : filter?.location as string,
-                                            mode : 'insensitive'
-                                        }
-                                    }
-                                ],
-                                
-                            }
-                        }
                     }
+
                 ]
             },
-            orderBy : {
-                ...orderBy
+            include : IncludeConferenceQuery
+        })
+        conferences = await paginate(
+            this.prismaService.conferences,
+            {
+                where : {
+                    AND : [
+                        {
+                            OR : [
+                                {
+                                    name : {
+                                        contains : where?.name as string,
+                                        mode : 'insensitive'
+                                    },
+                                },
+                                {
+                                    acronym : {
+                                        contains : where?.name as string,
+                                        mode : 'insensitive'
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            call_for_papers : {
+                                some : {
+                                    AND : [
+                                        {
+                                            ...(where?.fromDate ?{ start_date : {
+                                                gte : new Date(where?.fromDate as string)
+                                            }} : null)
+                                        },
+                                        {
+                                            ...(where?.toDate ? { end_date : {
+                                                lte : new Date(where?.toDate as string)
+                                            }} : null)
+                                        },
+                                        {
+                                            location : {
+                                                contains : where?.location as string,
+                                                mode : 'insensitive'
+                                            }
+                                        },
+                                    ]
+                                }
+                            }
+                        },
+                    (where?.rank ? 
+                        {
+                            conference_rank_footprints : {
+                                some : {
+                                    ranks_of_source : {
+                                        rank : {
+                                            contains : where?.rank as string,
+                                            mode : 'insensitive'
+                                        },
+                                        sources : {
+                                             name : {
+                                                contains : where?.source as string,
+                                                mode : 'insensitive'
+                                             }
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                        } : {})
+    
+                    ]
+                },
+                include : IncludeConferenceQuery
             },
-            include :
-                IncludeConferenceQuery,
-        }) ;
-
-        return getPaginatedResult({
-            data : conferences.map(conference => new ConferenceWithCfpsRankFootprintsData(conference as ConferenceWithCfpsRankFootprintsData)),
-            pagination : {
-                page : 1,
-                perPage : 10,
-                skip : 0,
-            }
-        } );
+            paginationArgs 
+        )
+        return conferences ;
     }
 
     public async search(  filter: CallForPaperData & {
@@ -171,6 +235,15 @@ export class ConferenceService {
                 id : id
             }
         }) 
+    }
+
+    public async getDetailWithId (id: string): Promise<ConferenceWithCfpsRankFootprintsData | null> {
+        return this.prismaService.conferences.findUnique({
+            where : {
+                id : id
+            },
+            include : IncludeConferenceQuery
+        }) as unknown as ConferenceWithCfpsRankFootprintsData;
     }
 
 

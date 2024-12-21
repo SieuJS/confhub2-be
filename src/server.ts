@@ -8,6 +8,9 @@ import { join } from 'path';
 import * as hbs from 'express-handlebars'
 import { renderConferenceItem } from './modules/view/helpers/renderConferenceItem';
 import { renderForDivForm, renderForGroupForm } from './modules/view/helpers';
+import { renderDetailConferenceHeader, renderDetailConferenceBody,renderDetailConferenceSource, renderImportantDates  } from './modules/view/helpers/detail-conference';
+import { renderPagination } from './modules/view/helpers/shared/renderPagination';
+
 /**
  * These are API defaults that can be changed using environment variables,
  * it is not required to change them (see the `.env.example` file)
@@ -68,13 +71,13 @@ async function bootstrap(): Promise<void> {
           defaultLayout: 'layout_main',
           layoutsDir: join(__dirname, '..', 'views', 'layouts'),
           partialsDir: join(__dirname, '..', 'views', 'partials'),
-          helpers : {renderConferenceItem , renderForDivForm , renderForGroupForm}
+          helpers : {renderConferenceItem , renderForDivForm , renderForGroupForm , renderDetailConferenceHeader , renderDetailConferenceBody , renderDetailConferenceSource , renderImportantDates , renderPagination}
         }).engine,
       );
     app.setViewEngine('hbs');
     // @todo Enable Helmet for better API security headers
 
-    app.setGlobalPrefix(process.env.API_PREFIX || API_DEFAULT_PREFIX , { exclude: [ '/home','view/(.*)' , '/browse' , '/post', '/detail'] });
+    app.setGlobalPrefix(process.env.API_PREFIX || API_DEFAULT_PREFIX , { exclude: [ '/home','view/(.*)' , '/browse' , '/post', '/create','/detail', '/detail/(.*)'] });
 
     if (!process.env.SWAGGER_ENABLE || process.env.SWAGGER_ENABLE === '1') {
         createSwagger(app);

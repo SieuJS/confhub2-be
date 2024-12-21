@@ -13,7 +13,7 @@ export enum Service {
 }
 
 export enum Role {
-
+    
     RESTRICTED = 'restricted'
 
 }

@@ -17,7 +17,7 @@ import { PaginateModule } from './paginate/paginate.module';
 import { CrawlApiModule } from './crawl-api/crawl-api.module';
 import { JobModule } from './job/job.module';
 import { SocketModule } from './socket/socket.module';
-
+import { ScraperModule } from './scraper/scraper.module';
 @Module({
     imports: [
         ClsModule.forRoot({
@@ -49,7 +49,8 @@ import { SocketModule } from './socket/socket.module';
         PaginateModule,
         CrawlApiModule,
         JobModule,
-        SocketModule
+        SocketModule,
+        ScraperModule
     ],
 })
 export class ApplicationModule {}

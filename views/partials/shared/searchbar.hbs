@@ -29,14 +29,13 @@
                                 <div class="col-6 m-0 pl-0">
                                     {{#renderForGroupForm forGroups}}{{/renderForGroupForm}}
                                 </div>
-
                             </div>
                             <div class="row col-sm-12 col-lg-6 m-0 mb-2">
                                 <div class="col-6 pl-0">
                                     <div class="form-group">
                                         <div class="form-field">
                                             <div class="icon"><span class="icon-briefcase"></span></div>
-                                            <input type="text" class="form-control" placeholder="Title or acroyms">
+                                            <input type="text" name = "name" class="form-control" placeholder="Title or acroyms">
                                         </div>
                                     </div>
                                 </div>
@@ -45,7 +44,7 @@
                                     <div class="form-group">
                                         <div class="form-field">
                                             <div class="icon"><span class="icon-map-marker"></span></div>
-                                            <input type="text" class="form-control" placeholder="Location">
+                                            <input type="text" name = "location" class="form-control" placeholder="Location">
                                         </div>
                                     </div>
                                 </div>
@@ -56,7 +55,7 @@
                                     <div class="form-group">
                                         <div class="form-field">
                                             <div class="icon"><span class="icon-calendar"></span></div>
-                                            <input type="date" class="form-control" id="start-date" placeholder="">
+                                            <input type="date" class="form-control" name = "fromDate" id="start-date" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +64,7 @@
                                     <div class="form-group">
                                         <div class="form-field">
                                             <div class="icon"><span class="icon-calendar"></span></div>
-                                            <input type="date" class="form-control" id="end-date" placeholder="">
+                                            <input type="date" name = "toDate" class="form-control" id="end-date" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -76,13 +75,11 @@
                                         <div class="form-field">
                                             <div class="select-wrap">
                                                 <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                                <select name="" id="" class="form-control">
+                                                <select name="source" id="" class="form-control">
                                                     <option value="">All Sources</option>
-                                                    <option value="">Full Time</option>
-                                                    <option value="">Part Time</option>
-                                                    <option value="">Freelance</option>
-                                                    <option value="">Internship</option>
-                                                    <option value="">Temporary</option>
+                                                      {{#each allSources}}
+                                                    <option value="{{name}}">{{name}}</option>
+                                                    {{/each}}
                                                 </select>
                                             </div>
                                         </div>
@@ -93,13 +90,11 @@
                                         <div class="form-field">
                                             <div class="select-wrap">
                                                 <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                                <select name="" id="" class="form-control">
-                                                    <option value="">All Years</option>
-                                                    <option value="">Full Time</option>
-                                                    <option value="">Part Time</option>
-                                                    <option value="">Freelance</option>
-                                                    <option value="">Internship</option>
-                                                    <option value="">Temporary</option>
+                                                <select name="rank" id="" class="form-control">
+                                                    <option value="">All Ranks</option>
+                                                    {{#each allRanks}}
+                                                    <option value="{{rank}}">{{rank}}</option>
+                                                    {{/each}}
                                                 </select>
                                             </div>
                                         </div>
@@ -112,6 +107,33 @@
                                 <div class="form-field">
                                     <button type="submit" class="form-control btn btn-primary">Search</button>
                                 </div>
+                                <script >
+                                    const form = document.querySelector('.search-job');
+                                    form.addEventListener('submit', (e) => {
+                                        e.preventDefault();
+                                        const source = form.querySelector('select[name="source"]').value;
+
+                                        const rank = form.querySelector('select[name="rank"]').value;
+                                        const name = form.querySelector('input[name="name"]').value;
+                                        const location = form.querySelector('input[name="location"]').value;
+                                        const fromDate = form.querySelector('input[name="fromDate"]').value;
+                                        const toDate = form.querySelector('input[name="toDate"]').value;
+                                        const forDivision = form.querySelector('select[name="forDivision"]').value;
+                                        const forGroup = form.querySelector('select[name="forGroup"]').value;
+                                        const data = {
+                                            source,
+                                            rank,
+                                            name,
+                                            location,
+                                            fromDate,
+                                            toDate,
+                                            forDivision,
+                                            forGroup
+                                        }
+                                        window.location.href = `/browse?${new URLSearchParams(data).toString()}`;
+                                    });
+                                </script>
+
                             </div>
                         </div>
 

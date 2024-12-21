@@ -23,7 +23,7 @@ model important_dates {
   cfp_id          String?          @db.Uuid
   date_type       String?
   date_value      DateTime?        @db.Date
-  status          String?
+  status          Boolean?
   call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_important_date_of_cfp")
 }
 

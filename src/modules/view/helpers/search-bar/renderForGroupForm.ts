@@ -6,7 +6,7 @@ export function renderForGroupForm (forGroups : FoRGroupData[]) {
             <div class="form-field">
                 <div class="select-wrap">
                     <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                    <select name="" id="" class="form-control">
+                    <select name="forGroup" id="" class="form-control">
                         <option value="">All subject areas</option>
                         ${forGroups.map(group => `<option value="${group.code}">${group.name}</option>`).join('')}
                     </select>

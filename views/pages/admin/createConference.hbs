@@ -1,0 +1,186 @@
+<div class="hero-wrap hero-wrap-2" style="background-image: url('images/bg_1.jpg');"
+    data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+            <div class="col-md-12 ftco-animate text-center mb-5">
+                <p class="breadcrumbs mb-0"><span class="mr-3"><a href="index.html">Home <i
+                                class="ion-ios-arrow-forward"></i></a></span> <span>Post</span></p>
+                <h1 class="mb-3 bread">Import Conference</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Add Conference</div>
+                    <div class="card-body">
+                        <form id="conference-form">
+                            <div class="form-group">
+                                <label for="name">Conference Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="acronym">Acronym</label>
+                                <input type="text" class="form-control" id="acronym" name="acronym" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="source">Source</label>
+                                    <input type="text" class="form-control" id="source" name="source" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="rank">Rank</label>
+                                    <input type="text" class="form-control" id="rank" name="rank" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="code">Field of Research Code</label>
+                                    <input type="text" class="form-control" id="code" name="code" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="field">Field of Research Name</label>
+                                    <input type="text" class="form-control" id="field" name="field" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="website">Website Link</label>
+                                <input type="url" class="form-control" id="website" name="website" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary py-2" id="submit-btn">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">Conference List</div>
+                    <div class="card-body">
+                        <table class="table table-bordered" id="conferenceList">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Acronym</th>
+                                    <th>Website</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Conference data will be inserted here -->
+                            </tbody>
+                        </table>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <!-- Pagination items will be inserted here -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-migrate-3.0.1.min.js"></script>
+
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script>
+    let socket;
+    $(document).ready(function() {
+        socket = io.connect();
+
+        socket.on('connect', function() {
+            console.log('Connected to the server');
+        });
+
+        socket.on('message', function(data) {
+            console.log('Message from server:', data);
+        });
+
+        socket.emit('message', { text: 'Hello, server!' });
+
+        socket.on('job_update', function(data) {
+            const rows = document.querySelectorAll('#conferenceList tbody tr');
+            rows.forEach(row => {
+                const cols = row.querySelectorAll('td');
+                if (row.getAttribute('data-id') === data.id) {
+                    const statusTd = cols[cols.length - 1];
+                    if(data.status === 'FAILED'){
+                        statusTd.textContent = 'Fail';
+                        return;
+                    }
+                    if(data.status === 'SUCCESS'){
+                        statusTd.textContent = 'Success';
+                        return;
+                    }
+                    statusTd.innerHTML = `<div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: ${data.progress_percent}%;" aria-valuenow="${data.progress_percent}" aria-valuemin="0" aria-valuemax="100">${data.progress_percent}%</div>
+                    </div>`;
+                }
+            });
+            console.log('Job update:', data);
+        });
+    });
+
+    document.getElementById('conference-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+        const acronym = document.getElementById('acronym').value;
+        const website = document.getElementById('website').value;
+        const submitButton = document.getElementById('submit-btn');
+        const source = document.getElementById('source').value;
+        const rank = document.getElementById('rank').value;
+        const fieldOfResearches = document.getElementById('field').value;
+        submitButton.disabled = true;
+
+        const data = {
+            name,
+            acronym,
+            link : website,
+            source,
+            rank,
+            fieldOfResearches
+        };
+
+        fetch('/api/v1/conference/to-crawl', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.job_id) {
+                const tableBody = document.querySelector('#conferenceList tbody');
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-id', result.job_id);
+                [name, acronym, website].forEach(col => {
+                    const td = document.createElement('td');
+                    td.textContent = col;
+                    tr.appendChild(td);
+                });
+                const statusTd = document.createElement('td');
+                statusTd.textContent = 'Prepare to crawl';
+                tr.appendChild(statusTd);
+                tableBody.appendChild(tr);
+                socket.emit('job', result.job_id);
+            } else {
+                alert('This conference already exists');
+            }
+            submitButton.disabled = false;
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            submitButton.disabled = false;
+        });
+    });
+</script>
+</section>

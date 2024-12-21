@@ -12,24 +12,24 @@ export class ConferenceAdapterToImportantDatePipe implements PipeTransform {
             return {
               cfp_id : null,
               date_type : 'submission',
-              date_value : new Date(date.date).toISOString(),
-              status : 'true' ,   
+              date_value : new Date(date.date),
+              status : true ,   
             } ;
         });
         const notificationDates = input.NotificationDate.map((date : CrawlDateData) : ImportantDateInput => {
             return {
               cfp_id : null,
               date_type : 'notification',
-              date_value : new Date(date.date).toISOString(),
-              status : 'true' ,   
+              date_value : new Date(date.date),
+              status : true ,   
             } ;
         })
         const cameraReadyDates = input.CameraReady.map((date : CrawlDateData) : ImportantDateInput => {
             return {
               cfp_id : null,
               date_type : 'camera_ready',
-              date_value : new Date(date.date).toISOString(),
-              status : 'true' ,   
+              date_value : new Date(date.date),
+              status : true ,   
             } ;
         });
 

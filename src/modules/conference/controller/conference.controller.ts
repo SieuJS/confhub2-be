@@ -13,7 +13,8 @@ import { ConferenceRankFootPrintsService } from '../service';
 import { CallForPaperData } from '../../call-for-paper';
 import { JobService } from '../../job/job.service';
 import { CrawlJobInput } from '../../job/model';
-
+import parser from 'any-date-parser';
+import { PaginationArgs } from '../../paginate';
 
 
 @Controller('conference')
@@ -41,14 +42,14 @@ export class ConferenceController {
     @ApiQuery({name : 'source', type : 'string', required : false})
     @ApiQuery({name : 'rank', type : 'string', required : false})
     @ApiResponse({ status: HttpStatus.OK, type : ConferenceWithCfpsRankFootprintsPaginateData })
-    public async find(@Query ()filter : ConferenceFilter , @Query() {
-        orderBy, pagination
-    } : {
-        filter?: ConferenceFilter;
-        orderBy?: { [key: string]: 'asc' | 'desc' };
-        pagination?: { page: number; perPage: number };
-    }): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
-        return this.conferenceService.find({filter, orderBy, pagination} );
+    public async find(@Query ()filter : ConferenceFilter , @Query() paginationArgs: PaginationArgs )
+    : Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
+        filter = {
+            ...filter , 
+            fromDate : filter.fromDate ? parser.fromString(filter.fromDate).toDateString() : null,
+            toDate : filter.toDate ? parser.fromString(filter.toDate).toDateString() : null
+        }
+        return this.conferenceService.find(filter,paginationArgs );
     }
 
     @Post()
@@ -69,11 +70,12 @@ export class ConferenceController {
     @ApiOperation({ summary: 'Create conference to crawl' })
     @ApiResponse({ status: HttpStatus.CREATED, type: ConferenceData })
     @ApiBody({type : ConferenceInput})
-    public async createToCrawl(@Body() inputs: ConferenceInput): Promise<any> {
+    public async createToCrawl(@Body() inputs: ConferenceInput & {link : string}): Promise<any> {
         const existsConference = await this.conferenceService.findOrCreate({
             name: inputs.name,
             acronym: inputs.acronym,
         } as ConferenceInput);
+
         const existsSource = await this.sourceService.findOrCreate({
             name: inputs.source,
             link: '',
@@ -100,7 +102,6 @@ export class ConferenceController {
             });
         });
 
-
         const existsCfp = await this.callForPaperService.find({
             conference_id: existsConference.data.id,
             status: true
@@ -112,8 +113,28 @@ export class ConferenceController {
             }
         }
 
+        if(inputs.link ) {
+            await this.callForPaperService.create({
+                conference_id: existsConference.data.id,
+                link: inputs.link,
+                status: true
+            } as CallForPaperData);
+            const job = await this.jobService.createJob({
+                conference_id : existsConference.data.id,
+                status : "WAITING PROCESS",
+                type : "UPDATE",
+                progress_detail : "start",
+                progress_percent : 10
+            } as CrawlJobInput);
+    
+            return {
+                message : "Conference created to crawl",
+                job_id : job.id
+            }
+        }
+
         const job = await this.jobService.createJob({
-            type : "CRAWL NEW"  ,
+            type : "CRAWL"  ,
             conference_id : existsConference.data.id as string,
             status : "WAITING PROCESS"
         } as CrawlJobInput);
@@ -128,5 +149,33 @@ export class ConferenceController {
 
     public async search(@Query() filter: ConferenceFilter ) {
         return filter;
+    }
+
+    @Get('/update-crawl-conference')
+    @ApiResponse({ status: HttpStatus.OK, type : CrawlJobInput })
+    public async updateCrawl(@Query('id') id: string) {
+        const job = await this.jobService.createJob({
+            conference_id : id,
+            status : "WAITING PROCESS",
+            type : "UPDATE",
+            progress_detail : "start",
+            progress_percent : 10
+        } as CrawlJobInput);
+
+        return {
+            message : "Conference created to crawl",
+            job_id : job.id
+        }
+    }
+
+    @Get('/create-conference')
+    @ApiResponse({ status: HttpStatus.OK, type : ConferenceData })
+    public async createConference(@Query('name') name: string, @Query('acronym') acronym: string) {
+        const existsConference = await this.conferenceService.findOrCreate({
+            name,
+            acronym
+        } as ConferenceInput);
+
+        return existsConference;
     }
 }

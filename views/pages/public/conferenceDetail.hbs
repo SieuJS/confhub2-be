@@ -1,194 +1,41 @@
-v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
+<div class="hero-wrap img" style="background-image: url(/images/bg_1.jpg);">
     <div class="overlay"></div>
     <div class="container">
       <div class="row d-md-flex no-gutters slider-text align-items-center justify-content-center">
-        <div class="col-md-10 d-flex align-items-center ftco-animate">
-          <div class="text text-center pt-5 mt-md-5">
-            <!-- <p class="mb-4">Find Job, Employment, and Career Opportunities</p> -->
-            <h1 class="mb-5">National Conference of the American Association for Artificial Intelligence</h1>
-            <h1 class="mb-4">(AAAI)</h1>
-            <div class="ftco-counter ftco-no-pt ftco-no-pb">
-              <div class="row">
-                <div class="col-md-4 d-flex justify-content-center counter-wrap ftco-animate">
-                  <div class="block-18">
-                    <div class="text d-flex">
-                      <div class="icon mr-2">
-                        <span class="icon-calendar"></span>
-                      </div>
-                      <div class="desc text-left">
-                        <strong class="number">Start Date: </strong>
-                        <strong class="number">Tue Feb 25</strong>
-                        <!-- <span>Countries</span> -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 d-flex justify-content-center counter-wrap ftco-animate">
-                  <div class="block-18 text-center">
-                    <div class="text d-flex">
-                      <div class="icon mr-2">
-                        <span class="icon-calendar"></span>
-                      </div>
-                      <div class="desc text-left">
-                        <strong class="number">End Date: </strong>
-                        <strong class="number">Tue Feb 25</strong>
-                        <!-- <span>Companies</span> -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 d-flex justify-content-center counter-wrap ftco-animate">
-                  <div class="block-18 text-center">
-                    <div class="text d-flex">
-                      <div class="icon mr-2">
-                        <span class="icon-my_location"></span>
-                      </div>
-                      <div class="desc text-left">
-                        <!-- <strong class="number">Location: </strong> -->
-                        <strong class="number">Philadelphia, Pennsylvania, USA</strong>
-                        <!-- <span>Active Employees</span> -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- <div class="form-field">
-              <button type="submit" class="form-control btn btn-primary">Search</button>
-              <button type="submit" class="form-control btn btn-primary">Search</button>
-            </div> -->
-
-            <div class="ftco-search my-md-5"> 
-              <div class="row">
-                <div class="col-md-12 tab-wrap">
-                  <div class="row no-gutters">
-                    <div class="col-md mr-md-2 mb-2">
-                      <button class="form-control btn btn-primary">
-                        <a href="" class="text-white">Follow</a>
-                      </button>
-                    </div>
-                    <div class="col-md">
-                        <button class="form-control btn btn-primary">
-                          <a href="" class="text-white">Update</a>
-                        </button>
-                    </div>
-                  </div>    
-                </div>
-              </div>
-            </div> 
-          </div>
-        </div>
+        {{#renderDetailConferenceHeader conference}} {{/renderDetailConferenceHeader}}
       </div>
     </div>
-  </div>
-
-
-  <section class="ftco-section bg-light">
+</div>
+    <section class="ftco-section bg-light"></section>
     <div class="container">
+  {{!-- import helper --}}
       <div class="row">
         <div class="col-lg-12 pr-lg-5">
           <div class="row justify-content-center pb-3">
             <div class="col-md-12 heading-section ftco-animate">
               <span class="subheading">conference details</span>
-              <h2 class="mb-4">National Conference of the American Association for Artificial Intelligence</h2>
+              {{#with conference}}
+              <h2 class="mb-4 conf-header" data-id = {{id}} >{{{name}}}</h2>
+              {{/with}}
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-12 ftco-animate">
-              <div class=" p-4 d-block d-lg-flex align-items-center">
-                <div class="job-post-item-header align-items-center">
-                  <h2 class="mr-3 text-black">Acronym: AAAI</h2>
-                  <h2 class="mr-3 text-black">Start date: 18/12/2024</h2>
-                  <h2 class="mr-3 text-black">End date: 18/12/2024</h2>
-                  <h2 class="mr-3 text-black">Location: USA</h2>
-                  <h2 class="mr-3 text-black">Submition date: 18/12/2024</h2>
-                  <!-- <h2 class="mr-3 text-black">Submition date: 18/12/2024</h2> -->
-                  <div class="one-forth ml-auto d-flex align-items-center mt-4 md-md-0">
-                    <a href="job-single.html" class="btn btn-primary py-2">More information</a>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div class="row">
+                {{#renderDetailConferenceBody conference }}{{/renderDetailConferenceBody}}
+                <!-- Bảng mới -->
+                {{#renderImportantDates importantDates}}{{/renderImportantDates
+                }}
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Bảng mới -->
+  </section>
   <section class="ftco-section testimony-section">
     <div class="container">
       <div class="row">
         <div class="col-md-12 ftco-animate">
           <div class="p-4 d-block d-lg-flex align-items-center">
-            <table id="conference-table" class="table table-striped">
-              <thead>
-                <tr>
-                  <th scope="col">Source</th>
-                  <th scope="col">Rank</th>
-                  <th scope="col">Field of Research</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Source 1</td>
-                  <td>Rank 1</td>
-                  <td>Field of Research 1</td>
-                </tr>
-                <tr>
-                  <td>Source 2</td>
-                  <td>Rank 2</td>
-                  <td>Field of Research 2</td>
-                </tr>
-                <tr>
-                  <td>Source 3</td>
-                  <td>Rank 3</td>
-                  <td>Field of Research 3</td>
-                </tr>
-                <tr>
-                  <td>Source 4</td>
-                  <td>Rank 4</td>
-                  <td>Field of Research 4</td>
-                </tr>
-                <tr>
-                  <td>Source 5</td>
-                  <td>Rank 5</td>
-                  <td>Field of Research 5</td>
-                </tr>
-                <tr>
-                  <td>Source 6</td>
-                  <td>Rank 6</td>
-                  <td>Field of Research 6</td>
-                </tr>
-                <tr>
-                  <td>Source 7</td>
-                  <td>Rank 7</td>
-                  <td>Field of Research 7</td>
-                </tr>
-                <tr>
-                  <td>Source 8</td>
-                  <td>Rank 8</td>
-                  <td>Field of Research 8</td>
-                </tr>
-                <tr>
-                  <td>Source 9</td>
-                  <td>Rank 9</td>
-                  <td>Field of Research 9</td>
-                </tr>
-                <tr>
-                  <td>Source 10</td>
-                  <td>Rank 10</td>
-                  <td>Field of Research 10</td>
-                </tr>
-                <tr>
-                  <td>Source 11</td>
-                  <td>Rank 11</td>
-                  <td>Field of Research 11</td>
-                </tr>
-                <!-- Thêm các hàng khác ở đây -->
-              </tbody>
-            </table>
+            {{#renderDetailConferenceSource conference }} {{/renderDetailConferenceSource}}
           </div>
           <div id="pagination" class="p-4 d-block d-lg-flex align-items-center"></div>
         </div>
@@ -213,7 +60,7 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
           
           <div class="about-author d-flex p-4 bg-light">
             <div class="bio mr-5">
-              <img src="images/person_1.jpg" alt="Image placeholder" class="img-fluid mb-4">
+              <img src="/images/person_1.jpg" alt="Image placeholder" class="img-fluid mb-4">
             </div>
             <div class="desc">
               <h3>George Washington</h3>
@@ -221,13 +68,12 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
             </div>
           </div>
 
-
           <div class="pt-5 mt-5">
             <h3 class="mb-5">6 Comments</h3>
             <ul class="comment-list">
               <li class="comment">
                 <div class="vcard bio">
-                  <img src="images/person_1.jpg" alt="Image placeholder">
+                  <img src="/images/person_1.jpg" alt="Image placeholder">
                 </div>
                 <div class="comment-body">
                   <h3>John Doe</h3>
@@ -239,7 +85,7 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
 
               <li class="comment">
                 <div class="vcard bio">
-                  <img src="images/person_1.jpg" alt="Image placeholder">
+                  <img src="/images/person_1.jpg" alt="Image placeholder">
                 </div>
                 <div class="comment-body">
                   <h3>John Doe</h3>
@@ -251,7 +97,7 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
                 <ul class="children">
                   <li class="comment">
                     <div class="vcard bio">
-                      <img src="images/person_1.jpg" alt="Image placeholder">
+                      <img src="/images/person_1.jpg" alt="Image placeholder">
                     </div>
                     <div class="comment-body">
                       <h3>John Doe</h3>
@@ -264,7 +110,7 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
                     <ul class="children">
                       <li class="comment">
                         <div class="vcard bio">
-                          <img src="images/person_1.jpg" alt="Image placeholder">
+                          <img src="/images/person_1.jpg" alt="Image placeholder">
                         </div>
                         <div class="comment-body">
                           <h3>John Doe</h3>
@@ -276,7 +122,7 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
                           <ul class="children">
                             <li class="comment">
                               <div class="vcard bio">
-                                <img src="images/person_1.jpg" alt="Image placeholder">
+                                <img src="/images/person_1.jpg" alt="Image placeholder">
                               </div>
                               <div class="comment-body">
                                 <h3>John Doe</h3>
@@ -294,7 +140,7 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
 
               <li class="comment">
                 <div class="vcard bio">
-                  <img src="images/person_1.jpg" alt="Image placeholder">
+                  <img src="/images/person_1.jpg" alt="Image placeholder">
                 </div>
                 <div class="comment-body">
                   <h3>John Doe</h3>
@@ -359,7 +205,7 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
           <div class="sidebar-box ftco-animate">
             <h3 class="heading-3">Recent Blog</h3>
             <div class="block-21 mb-4 d-flex">
-              <a class="blog-img mr-4" style="background-image: url(images/image_1.jpg);"></a>
+              <a class="blog-img mr-4" style="background-image: url(/images/image_1.jpg);"></a>
               <div class="text">
                 <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
                 <div class="meta">
@@ -370,7 +216,7 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
               </div>
             </div>
             <div class="block-21 mb-4 d-flex">
-              <a class="blog-img mr-4" style="background-image: url(images/image_2.jpg);"></a>
+              <a class="blog-img mr-4" style="background-image: url(/images/image_2.jpg);"></a>
               <div class="text">
                 <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
                 <div class="meta">
@@ -381,7 +227,7 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
               </div>
             </div>
             <div class="block-21 mb-4 d-flex">
-              <a class="blog-img mr-4" style="background-image: url(images/image_3.jpg);"></a>
+              <a class="blog-img mr-4" style="background-image: url(/images/image_3.jpg);"></a>
               <div class="text">
                 <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about the blind texts</a></h3>
                 <div class="meta">
@@ -412,7 +258,101 @@ v class="hero-wrap img" style="background-image: url(images/bg_1.jpg);">
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente consectetur similique, inventore eos fugit cupiditate numquam!</p>
           </div>
         </div>
-
       </div>
     </div>
   </section> <!-- .section -->
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const rowsPerPage = 10;
+      const table = document.getElementById('conference-table');
+      const pagination = document.getElementById('pagination');
+      const rows = table.querySelectorAll('tbody tr');
+      const totalPages = Math.ceil(rows.length / rowsPerPage);
+      let currentPage = 1;
+
+      function displayPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        rows.forEach((row, index) => {
+          row.style.display = (index >= start && index < end) ? '' : 'none';
+        });
+        updatePagination(page);
+      }
+
+      function createPagination() {
+        pagination.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+          const button = document.createElement('button');
+          button.textContent = i;
+          button.classList.add('btn', 'btn-primary', 'mr-1');
+          button.addEventListener('click', () => displayPage(i));
+          pagination.appendChild(button);
+        }
+        updatePagination(currentPage);
+      }
+
+      function updatePagination(page) {
+        const buttons = pagination.querySelectorAll('button');
+        buttons.forEach((button, index) => {
+          if (index + 1 === page) {
+            button.classList.add('btn-warning');
+            button.classList.remove('btn-primary');
+          } else {
+            button.classList.add('btn-primary');
+            button.classList.remove('btn-warning');
+          }
+        });
+      }
+      displayPage(currentPage);
+      createPagination();
+    });
+
+</script>
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script>
+  let socket ;
+  document.addEventListener('DOMContentLoaded', function() {
+    socket = io();
+    const updateButton = document.querySelector('.update-btn');
+    socket.on('job_update', function(data) {
+      console.log(data);
+
+      if(data.status === 'FAILED'){
+        window.alert('Update failed');
+        window.location.reload();
+      }
+      else
+      if(data.status === 'SUCCESS'){
+        window.alert('Update completed');
+        window.location.reload();
+      }
+      else{
+        updateButton.innerHTML = "Updating... " + data.progress_percent + "%";
+      }
+    });
+  });
+</script>
+
+<script>
+  const updateButton = document.querySelector('.update-btn');
+  const confid = document.querySelector('.conf-header').getAttribute('data-id');
+
+  updateButton.addEventListener('click', async () => {
+    console.log('updateButton clicked');
+    let text = updateButton.innerHTML;
+    updateButton.innerHTML = 'Updating...';
+    const response = await fetch('/api/v1/conference/update-crawl-conference?id='+confid);
+    const data = await response.json();
+    if(!data.job_id){
+      window.alert('Update failed');
+    }
+    else{
+      socket.emit('job', data.job_id);
+    }
+    updateButton.innerHTML = text;
+    console.log(data);
+  });
+
+</script>

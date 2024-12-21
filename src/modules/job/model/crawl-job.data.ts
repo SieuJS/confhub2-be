@@ -18,7 +18,7 @@ export class CrawlJobData {
     public readonly status: "WAITING PROCESS" | "PROCESSING" | "SUCCESS" | "FAILED";
 
     @ApiProperty({description: 'Type of job', example: 'CRAWL'})
-    public readonly type: string | null;
+    public readonly type: "CRAWL" | "UPDATE" | "DELETE";
 
     @ApiProperty({description: 'durraion', example: '10'})
     public readonly duration: number | null;
@@ -32,7 +32,7 @@ export class CrawlJobData {
     constructor (entity: crawl_jobs) {
         this.id = entity.id;
         this.conference_id = entity.conference_id;
-        this.type = entity.type;
+        this.type = entity.type as any;
         this.progress_percent = entity.progress_percent;
         this.progress_detail = entity.progress_detail;
         this.duration = entity.duration;
