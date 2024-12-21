@@ -16,7 +16,7 @@ export function renderConferenceItem(conferences: ConferenceWithCfpsRankFootprin
     let someTrueCof = conference.call_for_papers.filter(cfp => cfp.status === true);
    
     if(conference.conference_rank_footprints.length === 0) {
-        console.log("no rank");
+
     }
     else {
         higestSource = conference.conference_rank_footprints.sort((a, b) => Number(b.year) - Number(a.year))[0];

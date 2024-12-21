@@ -24,7 +24,6 @@ export function renderDetailConferenceHeader (conference: ConferenceWithCfpsRank
         }
     }
     if(conference.conference_rank_footprints.length === 0) {
-        console.log("no rank");
     }
     else {
         higestSource = conference.conference_rank_footprints.sort((a, b) => Number(b.year) - Number(a.year))[0];
