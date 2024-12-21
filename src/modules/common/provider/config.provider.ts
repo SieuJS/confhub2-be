@@ -16,8 +16,6 @@ export const configProvider = {
             JWT_SECRET: Joi.string().required(),
             JWT_ISSUER: Joi.string().required(),
             HEALTH_TOKEN: Joi.string().required(),
-            PASSENGERS_ALLOWED: Joi.string().valid('yes', 'no').required(),
-            CONFERENCES_ALLOWED: Joi.string().valid('yes', 'no').required(),
             DB_USER: Joi.string().required(),
             DB_PASSWORD: Joi.string().required(),
             DB_HOST: Joi.string().required(),

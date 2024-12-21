@@ -45,5 +45,6 @@ COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
 COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
 COPY --from=builder --chown=node:node /home/node/client/ ./client/
 COPY --from=builder --chown=node:node /home/node/views/ ./views/
+COPY --from=builder --chown=node:node /home/node/prisma/ ./prisma/
 
 CMD ["node", "dist/server.js"]
