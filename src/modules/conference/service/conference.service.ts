@@ -25,7 +25,6 @@ export class ConferenceService {
     public async find(where? : ConferenceFilter, paginationArgs? : PaginationArgs ): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
         let conferences  : 
         ConferenceWithCfpsRankFootprintsPaginateData;
-        console.log(where , paginationArgs);
         this.prismaService.conferences.findMany({
             where : {
                 AND : [
