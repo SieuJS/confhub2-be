@@ -75,7 +75,7 @@ model call_for_papers {
   conferences     conferences?      @relation(fields: [conference_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_belong_conference")
   important_dates important_dates[]
   rank_of_cfp     rank_of_cfp[]
-  @@unique([conference_id, start_date, end_date])
+  @@unique([conference_id, status])
 }
 
 model conference_rank_footprints {
@@ -83,7 +83,7 @@ model conference_rank_footprints {
   conference_id   String?       @db.Uuid
   rank_id         String?       @db.Uuid
   for_id          String?       @db.Uuid
-  year            Decimal?      @db.Decimal
+  year            Int?      
   conferences     conferences?  @relation(fields: [conference_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_conference_rank_footprints")
   for_group       for_group?    @relation(fields: [for_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_conference_rank_footprints_for")
   ranks_of_source source_ranks? @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_conference")
