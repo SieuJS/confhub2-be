@@ -1,6 +1,5 @@
 import { conference_rank_footprints } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
-import { Decimal } from "@prisma/client/runtime/library";
 
 
 export class ConferenceRankFootPrintData {
@@ -17,13 +16,13 @@ export class ConferenceRankFootPrintData {
     for_id : string ;
 
     @ApiProperty ({description : "year of rank", example : 2021})
-    year : Decimal;
+    year : number | null;
 
     constructor (data : conference_rank_footprints) {
         this.id = data.id;
         this.conference_id = data.conference_id as string;
         this.rank_id = data.rank_id as string;
-        this.year = data.year as Decimal;
+        this.year = data.year ;
         this.for_id = data.for_id as string;
     }
 }

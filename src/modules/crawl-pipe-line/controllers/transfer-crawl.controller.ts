@@ -86,7 +86,7 @@ export class TransferCrawlController {
             await this.conferenceRankFootPrintService.findOrCreate({
                 conference_id: existsConference.data.id,
                 rank_id: existsRank.id,
-                year: new Decimal(parseInt(input.Source.slice(-4), 10)),
+                year: parseInt(input.Source.slice(-4), 10),
                 for_id: existForGroup.id
             });
         });

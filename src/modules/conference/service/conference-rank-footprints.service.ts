@@ -35,7 +35,7 @@ export class ConferenceRankFootPrintsService {
                     conference_id: input.conference_id,
                     rank_id: input.rank_id,
                     for_id: input.for_id,
-                    year: input.year
+                    year: input.year as number
                 }
             }
         });
