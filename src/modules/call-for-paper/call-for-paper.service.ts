@@ -109,10 +109,9 @@ export class CallForPaperService {
     public async createOrUpdate(data: CallForPaperInput): Promise<CallForPaperData> {
         const callForPaper = await this.txHost.tx.call_for_papers.upsert({
             where: {
-                conference_id_start_date_end_date : {
+                conference_id_status : {
                     conference_id: data.conference_id as string,
-                    start_date: data.start_date as Date,
-                    end_date: data.end_date as Date,
+                    status: true,
                 }
             },
             create: {
