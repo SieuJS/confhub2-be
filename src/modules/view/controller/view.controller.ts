@@ -27,11 +27,4 @@ export class ViewController  {
     async post(@Res() res: Response) {
         return res.render('pages/admin/manageConference');
     }
-
-    @Get('/details')
-    async details(@Res() res: Response) {
-        return res.render('pages/public/conferenceDetails');
-    }
-
-
 }
