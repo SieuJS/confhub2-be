@@ -1,9 +1,12 @@
-import {  ApiProperty } from "@nestjs/swagger";
-import { PaginationMeta } from "../../paginate";
+import {  ApiProperty, PartialType } from "@nestjs/swagger";
+import { PaginationArgs, PaginationMeta } from "../../paginate";
 
 export class ConferenceApiLintAttributes {
     @ApiProperty( {description : "The name of the conference" , type : String})
     name : string ;
+    
+    @ApiProperty({description : "The acronym of the conference" , type : String})
+    acronym : string ;
 
     @ApiProperty ({description : "The start date of the conference " , type : String })
     startDate : string ; 
@@ -21,7 +24,16 @@ export class ConferenceApiLintAttributes {
     location : string ;
     
     @ApiProperty ({description : "Field Of Research" , type : String, isArray : true})
-    fieldOfResearch : string [] ;
+    fieldOfResearches : string [] ;
+}
+
+import { IntersectionType } from "@nestjs/swagger";
+
+export class ConferenceApiLintParams extends IntersectionType(
+    PartialType(ConferenceApiLintAttributes),
+    PartialType(PaginationArgs)
+) { 
+
 }
 
 export class ConferenceApiLintData {
