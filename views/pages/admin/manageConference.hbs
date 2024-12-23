@@ -142,52 +142,25 @@
                         return cols.slice(1); // Skip the first column
                     }
 
-                    function displayTablePage(page) {
-                        tableBody.innerHTML = '';
-                        const start = (page - 1) * rowsPerPage;
-                        const end = start + rowsPerPage;
-                        const pageRows = rows.slice(start, end);
-                        pageRows.forEach(row => {
-                            const cols = parseCSVRow(row);
-                            const tr = document.createElement('tr');
-                            const title = cols[0];
-                            const acronym = cols[1];
-                            const source = cols[2];
-                            const rank = cols[3];
-                            const fieldOfResearch = cols.slice(5).join(',');
-                            [title, acronym, source, rank, fieldOfResearch].forEach(col => {
-                                const td = document.createElement('td');
-                                td.textContent = col;
-                                tr.appendChild(td);
-                            });
-                            const processTd = document.createElement('td');
-                            processTd.textContent = 'Waiting';
-                            tr.appendChild(processTd);
-                            tableBody.appendChild(tr);
+                    tableBody.innerHTML = '';
+                    rows.forEach(row => {
+                        const cols = parseCSVRow(row);
+                        const tr = document.createElement('tr');
+                        const title = cols[0];
+                        const acronym = cols[1];
+                        const source = cols[2];
+                        const rank = cols[3];
+                        const fieldOfResearch = cols.slice(5).join(',');
+                        [title, acronym, source, rank, fieldOfResearch].forEach(col => {
+                            const td = document.createElement('td');
+                            td.textContent = col;
+                            tr.appendChild(td);
                         });
-                    }
-
-                    function setupPagination() {
-                        pagination.innerHTML = '';
-                        const pageCount = Math.ceil(rows.length / rowsPerPage);
-                        for (let i = 1; i <= pageCount; i++) {
-                            const li = document.createElement('li');
-                            li.classList.add('page-item');
-                            const a = document.createElement('a');
-                            a.classList.add('page-link');
-                            a.href = '#';
-                            a.textContent = i;
-                            a.addEventListener('click', function(event) {
-                                event.preventDefault();
-                                currentPage = i;
-                                displayTablePage(currentPage);
-                            });
-                            li.appendChild(a);
-                            pagination.appendChild(li);
-                        }
-                    }
-                    displayTablePage(currentPage);
-                    setupPagination();
+                        const processTd = document.createElement('td');
+                        processTd.textContent = 'Waiting';
+                        tr.appendChild(processTd);
+                        tableBody.appendChild(tr);
+                    });
                 };
                 reader.readAsText(file);
             }
