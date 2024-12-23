@@ -96,10 +96,15 @@ export function renderDetailConferenceHeader (conference: ConferenceWithCfpsRank
                         <a href="" class="text-white">Follow</a>
                       </button>
                     </div>
-                    <div class="col-md">
+                    <div class="col-md mr-md-2 mb-2">
                         <button class="form-control btn btn-primary update-btn">
                           <a href="#" class="text-white">Update</a>
                         </button>
+                    </div>
+                    <div class = "col-md mr-md-2 mb-2">
+                      <button class="form-control btn btn-primary">
+                        <a href="${mainCfp.link}" target="_blank" class="text-white">Go to</a>
+                      </button>
                     </div>
                   </div>    
                 </div>
