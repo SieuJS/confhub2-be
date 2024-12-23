@@ -18,6 +18,7 @@ import { CrawlApiModule } from './crawl-api/crawl-api.module';
 import { JobModule } from './job/job.module';
 import { SocketModule } from './socket/socket.module';
 import { ScraperModule } from './scraper/scraper.module';
+import { ConfApiLintModule } from './conf-api-lint/conf-api-lint.module';
 @Module({
     imports: [
         ClsModule.forRoot({
@@ -50,7 +51,8 @@ import { ScraperModule } from './scraper/scraper.module';
         CrawlApiModule,
         JobModule,
         SocketModule,
-        ScraperModule
+        ScraperModule,
+        ConfApiLintModule
     ],
 })
 export class ApplicationModule {}
