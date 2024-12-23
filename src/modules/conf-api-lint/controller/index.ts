@@ -1,1 +1,1 @@
-export * from './conference-api-lint.conference.controller'
+export * from './conference-api-lint.controller'
