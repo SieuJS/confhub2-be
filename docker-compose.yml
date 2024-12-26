@@ -1,36 +1,23 @@
 version: '3'
 
 services:
-  nestjs:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '3000:3000'
-    volumes:
-      - '.:/app'
-    environment:
-      - DB_HOST=db-postgresql-blr1-30615-do-user-17467981-0.m.db.ondigitalocean.com
-      - DB_PORT=25060
-      - DB_NAME_DEV=confhub-development
-      - DB_SCHEMA=confhub
-      - DB_DIALECT=postgres
-      - DB_NAME=confhub-development
-      - DB_USER=doadmin
-      - DB_PASSWORD=AVNS_TK6mL23WhT_WWMdxG7P
-      - DATABASE_URL=postgresql://doadmin:AVNS_TK6mL23WhT_WWMdxG7P@db-postgresql-blr1-30615-do-user-17467981-0.m.db.ondigitalocean.com:25060/confhub-development?schema=confhub&sslmode=require?sslcert=confhub.crt
-      - API_PORT=3000
-      - SWAGGER_ENABLE=1
-      - API_PREFIX=/api/v1
-      - JWT_SECRET=secret
-      - JWT_ISSUER=nestjs
-      - HEALTH_TOKEN=health
-      - PASSENGERS_ALLOWED=yes
-      - FIELD_CODE_LOADED=yes
-      - CONFERENCES_ALLOWED=yes
-    restart: always
-    networks:
-      - webnet
+    crawls_redis:
+        container_name: crawls_redis
+        image: redis:alpine
+        expose:
+          - 6379
+        ports:
+          - 6379:6379 # Public port để lát nữa test multiple worker
+        restart: unless-stopped
+    crawls_redis_commander:
+        container_name: crawls_redis_commander
+        image: rediscommander/redis-commander:latest
+        environment:
+          - REDIS_HOSTS=local:crawls_redis:6379
+        ports:
+          - '8088:8081'
+        depends_on:
+          - crawls_redis
 
 networks:
   webnet:

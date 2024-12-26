@@ -31,10 +31,10 @@ model journal_rank_footprints {
   id                  String        @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
   journal_id          String?       @db.Uuid
   rank_id             String?       @db.Uuid
-  for_id              String?       @db.Uuid
+  category            String?
   year                Decimal?      @db.Decimal
   journals            journals?     @relation(fields: [journal_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_journal_rank_footprints")
-  for_group           for_group?    @relation(fields: [for_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_journal_rank_footprints_for")
+
   all_ranks_of_source source_ranks? @relation(fields: [rank_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rank_of_journal")
 }
 
@@ -75,6 +75,10 @@ model call_for_papers {
   conferences     conferences?      @relation(fields: [conference_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cfp_belong_conference")
   important_dates important_dates[]
   rank_of_cfp     rank_of_cfp[]
+  notification_dates notification_dates[]
+  submission_dates submission_dates[]
+  registration_dates registration_dates[]
+  camera_ready_dates camera_ready_dates[]
   @@unique([conference_id, status])
 }
 
@@ -117,7 +121,6 @@ model for_group {
   conference_rank_footprints conference_rank_footprints[]
   rank_of_cfp                rank_of_cfp[]
   for_division               for_division?                @relation(fields: [division_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_for_group_of_division")
-  journal_rank_footprints    journal_rank_footprints[]
 }
 
 model source_ranks {
@@ -162,4 +165,40 @@ model job_watchers {
   job_id String @db.Uuid 
   jobs crawl_jobs @relation(fields: [job_id], references: [id], onDelete: NoAction, onUpdate: NoAction ,map: "fk_job_watchers_sign_job")
   @@unique([socket_id, job_id])
+}
+
+model notification_dates {
+  id            String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  cfp_id        String?   @db.Uuid
+  date_type     String?
+  date_value    DateTime? @db.Date
+  status        Boolean?
+  call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_notification_date_of_cfp")
+}
+
+model submission_dates {
+  id            String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  cfp_id        String?   @db.Uuid
+  date_type     String?
+  date_value    DateTime? @db.Date
+  status        Boolean?
+  call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_submission_date_of_cfp")
+}
+
+model registration_dates {
+  id            String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  cfp_id        String?   @db.Uuid
+  date_type     String?
+  date_value    DateTime? @db.Date
+  status        Boolean?
+  call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_registration_date_of_cfp")
+}
+
+model camera_ready_dates {
+  id            String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  cfp_id        String?   @db.Uuid
+  date_type     String?
+  date_value    DateTime? @db.Date
+  status        Boolean?
+  call_for_papers call_for_papers? @relation(fields: [cfp_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_camera_ready_date_of_cfp")
 }

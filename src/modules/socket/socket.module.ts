@@ -11,5 +11,6 @@ import { JobWatcherService } from './service/job-watcher.service';
     imports : [CommonModule,ConferenceModule, CallForPaperModule, JobModule, CrawlApiModule], 
     controllers: [],
     providers: [SocketGateway, JobWatcherService],
+    exports: [SocketGateway]
 })
 export class SocketModule {}

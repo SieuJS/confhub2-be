@@ -1,25 +1,32 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Injectable } from '@nestjs/common';
-import {TransactionHost} from '@nestjs-cls/transactional';
+import {Transactional, TransactionHost} from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import {   paginator, PaginatorTypes } from '@nodeteam/nestjs-prisma-pagination';
 import { CallForPaperData } from '../../call-for-paper';
 
 import { PatternSearchCfpQuery } from '../../call-for-paper/query';
-
+import { SourceService, RankService } from '../../rank-source';
 import { PrismaService } from '../../common';
 import { ConferenceData, ConferenceFilter, ConferenceInput } from '../model';
 import { ConferenceWithCfpsRankFootprintsData, ConferenceWithCfpsRankFootprintsPaginateData } from '../model';
 
 import { IncludeConferenceQuery } from '../query';
 import { PaginationArgs } from '../../paginate';
+import { FieldOfResearchService } from '../../field-of-research/service';
+import { ConferenceRankFootPrintsService } from './conference-rank-footprints.service';
 
 const paginate : PaginatorTypes.PaginateFunction = paginator({});
 @Injectable()
 export class ConferenceService {
+    
     public constructor(
         private readonly prismaService: PrismaService,
-        private readonly txHost: TransactionHost<TransactionalAdapterPrisma>
+        private readonly txHost: TransactionHost<TransactionalAdapterPrisma>,
+        private readonly sourceService: SourceService,
+        private readonly rankService: RankService,
+        private readonly fieldOfResearchService: FieldOfResearchService,
+        private readonly conferenceRankFootPrintService: ConferenceRankFootPrintsService
     ) {}
 
     public async find(where? : ConferenceFilter, paginationArgs? : PaginationArgs ): Promise<ConferenceWithCfpsRankFootprintsPaginateData> {
@@ -244,6 +251,41 @@ export class ConferenceService {
             include : IncludeConferenceQuery
         }) as unknown as ConferenceWithCfpsRankFootprintsData;
     }
+
+    @Transactional()
+    public async importConferenceFromCoreInput(inputs : ConferenceInput) : Promise<ConferenceData> {
+        const existsConference = await this.findOrCreate({
+            name: inputs.name,
+            acronym: inputs.acronym,
+        } as ConferenceInput);
+
+        const existsSource = await this.sourceService.findOrCreate({
+            name: inputs.source,
+            link: '',
+        });
+        const existsRank = await this.rankService.createOrFindRankOfSource({
+            source_id: existsSource.id,
+            rank: inputs.rank,
+            value: 0 as any,
+        });
+
+        inputs.fieldOfResearches.split(',').forEach(async (field) => {
+            if(field === '') return;
+            const newField = `${field}`.trim();
+            const existForGroup = await this.fieldOfResearchService.findOrCreateGroup({
+            code: newField,
+            name: 'unknown'
+            });
+
+            await this.conferenceRankFootPrintService.findOrCreate({
+            conference_id: existsConference.data.id,
+            rank_id: existsRank.id,
+            year: (parseInt(inputs.source.slice(-4), 10)) as any,
+            for_id: existForGroup.id
+            });
+        });
+        return existsConference.data;
+    } 
 
 
 }

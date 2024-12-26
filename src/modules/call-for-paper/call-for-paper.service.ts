@@ -183,4 +183,36 @@ export class CallForPaperService {
         });
         return new CallForPaperData(cfp);
     }
+
+    public async removeDates(cfpId : string) {
+        await this.txHost.tx.important_dates.deleteMany({
+            where: {
+                cfp_id : cfpId
+            }
+        });
+
+        await this.txHost.tx.submission_dates.deleteMany({
+            where: {
+                cfp_id : cfpId
+            }
+        });
+
+        await this.txHost.tx.camera_ready_dates.deleteMany({
+            where: {
+                cfp_id : cfpId
+            }
+        });
+
+        await this.txHost.tx.registration_dates.deleteMany({
+            where: {
+                cfp_id : cfpId
+            }
+        });
+
+        await this.txHost.tx.notification_dates.deleteMany({
+            where: {
+                cfp_id : cfpId
+            }
+        });
+    }
 }

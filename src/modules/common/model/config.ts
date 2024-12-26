@@ -27,4 +27,7 @@ export interface Config {
     readonly DB_WATCHER : string;
 
     readonly FIELD_CODE_LOADED : string;
+
+    readonly REDIS_PORT : number ; 
+    readonly REDIS_HOST : string ;
 }

@@ -24,7 +24,7 @@ export class ConferenceApiLintAttributes {
     location : string ;
     
     @ApiProperty ({description : "Field Of Research" , type : String, isArray : true})
-    fieldOfResearches : string [] ;
+    fieldOfResearch : string ;
 }
 
 import { IntersectionType } from "@nestjs/swagger";
@@ -53,9 +53,6 @@ export class ConferenceApiLintMetaData {
 
     @ApiProperty({description : "Ranks" , type : String , isArray : true})
     ranks : string [] ;
-
-    @ApiProperty({description : "Locations" , type : String , isArray : true})
-    locations : string [] ;
 
     @ApiProperty({description : "pagination" , type : PaginationMeta})
     pagination : PaginationMeta ;

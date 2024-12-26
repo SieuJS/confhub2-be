@@ -99,7 +99,7 @@ export class SocketGateway  implements OnGatewayInit, OnGatewayConnection, OnGat
             this.server.emit("table_change", payload);
         });
 
-        this.loggerService.info("PostgreSQL listener is ready and waiting for changes...");
+        this.loggerService.info("PostgreSQL listener is ready and waiting for changes...")
     }
 
     // Example WebSocket message listener
@@ -114,6 +114,14 @@ export class SocketGateway  implements OnGatewayInit, OnGatewayConnection, OnGat
         return "Received data: " + job;
     }
 
+    public notiUpdateJob(job : string) {
+        this.server.emit("job_update", job);
+    }
+
+    public helo () {
+        this.server.emit("helo", "helo");
+    }
+    
     // Handle cleanup on gateway shutdown
     async onModuleDestroy() {
         await this.pgClient.end(); // Clean up PostgreSQL client connection

@@ -32,6 +32,14 @@ export class LoggerService {
         this.instance.info(message);
     }
 
+    public warn(message: string) {
+        this.instance.warn(message);
+    }
+
+    public debug(message: string) {
+        this.instance.debug(message);
+    }
+
     public error(message: string) {
         this.instance.error(message);
     }
