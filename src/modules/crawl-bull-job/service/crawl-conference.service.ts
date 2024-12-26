@@ -62,5 +62,30 @@ export class CrawlConferenceService {
 
     }
 
+    async crawlUpdateConference(conferenceId : string) : Promise<string | undefined> {
+        const conference = await this.conferenceService.findById(conferenceId);
+        if (!conference) {
+            throw new Error("Conference not found");
+        }
+
+        const existsJobId  = await this.cacheManager.get(`crawl-job-for-${conferenceId}`)  as string;
+
+        if (existsJobId) {
+            return existsJobId;
+        }
+        const mainCfp = await this.callForPaperService.getMainCfp(conferenceId);
+
+        const queueJob = await this.uploadQueue.add(ProcessCrawlToken.CRAWL_UPDATE_CONF_JOB_NAME , {
+            Title : conference.name,
+            Acronym : conference.acronym,
+            Link : mainCfp?.link
+        } as ConferenceCrawlInput);
+
+        await this.cacheManager.set(`crawl-job-for-${conferenceId}`, queueJob.id);
+        await this.cacheManager.set(`job-${queueJob.id}`, conferenceId);
+
+        return queueJob.id;
+    }
+
 
 }

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Injectable } from '@nestjs/common';
-import {Transactional, TransactionHost} from '@nestjs-cls/transactional';
+import { TransactionHost} from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import {   paginator, PaginatorTypes } from '@nodeteam/nestjs-prisma-pagination';
 import { CallForPaperData } from '../../call-for-paper';
@@ -252,7 +252,6 @@ export class ConferenceService {
         }) as unknown as ConferenceWithCfpsRankFootprintsData;
     }
 
-    @Transactional()
     public async importConferenceFromCoreInput(inputs : ConferenceInput) : Promise<ConferenceData> {
         const existsConference = await this.findOrCreate({
             name: inputs.name,
@@ -269,7 +268,9 @@ export class ConferenceService {
             value: 0 as any,
         });
 
+
         inputs.fieldOfResearches.split(',').forEach(async (field) => {
+            console.log("get" ,field);
             if(field === '') return;
             const newField = `${field}`.trim();
             const existForGroup = await this.fieldOfResearchService.findOrCreateGroup({

@@ -98,12 +98,9 @@ export class ConferenceController {
     public async uploadConference(@Body() input: ConferenceInput) {
         const conference = await this.conferenceService.importConferenceFromCoreInput(input);
         if(!conference) {
-            return {
-                message : "Conference not found",
-                data : null
-            }
+            throw new PreconditionFailedException('Conference not found');
         }
-        
+
         return {
             message : "Conference found",
             data : conference

@@ -54,21 +54,59 @@ export class NotifyCrawlGateway implements OnGatewayInit, OnGatewayConnection, O
             }
             await this.listenerService.createOrAddToEvent(`watch-job-${jobId}`, client.id);
             console.log(`User ${client.id} watching job ${jobId}`);
-            return {
+
+            this.server.to(client.id).emit('update-job',{
+                conferenceId,
                 status : "Success",
-                message : "Job created"
-            }
+                message : "Job created",
+                jobId
+            });
+
         }
         catch (e) {
             return {
-                status : "Error",
-                message : e.message
+                event : 'crawl-new',
+                data :{
+                    status : "Error",
+                    message : e.message
+                }
+            }
+        }
+    }
+
+    @SubscribeMessage('crawl-update')
+    async handleUpdateCrawl(client: Socket, conferenceId: string) {
+        try {
+            console.log('crawl-update message received:'+ conferenceId);
+            const jobId = await this.crawlConferenceService.crawlUpdateConference(conferenceId);
+            if(!jobId) {
+                throw new Error("Job not created");
+            }
+            await this.listenerService.createOrAddToEvent(`watch-job-${jobId}`, client.id);
+            console.log(`User ${client.id} watching job ${jobId}`);
+
+            this.server.to(client.id).emit('update-job',{
+                conferenceId,
+                status : "Success",
+                message : "Job created",
+                jobId
+            });
+
+        }
+        catch (e) {
+            return {
+                event : 'crawl-update',
+                data :{
+                    status : "Error",
+                    message : e.message
+                }
             }
         }
     }
 
     public async notifyJob(jobId : string, status : string,message : string) {
         const users = await this.listenerService.getUsersForEvent(`watch-job-${jobId}`) as string[];
+
         if (users) {
             users.forEach(async user => {
                 await console.log("Notifying user", user);
@@ -81,13 +119,9 @@ export class NotifyCrawlGateway implements OnGatewayInit, OnGatewayConnection, O
         }
     }
 
-
-
     public sendNotification(message: string) {
         this.server.emit('notify', message);
     }
-
-
 }
 
 export default NotifyCrawlGateway;

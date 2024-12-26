@@ -118,6 +118,9 @@ export class ConferenceApiLintService {
                                         },
                                     }),
                                 },
+                                {
+                                    status: true,
+                                }
                             ],
                         },
                     },
@@ -214,6 +217,9 @@ export class ConferenceApiLintService {
                                             },
                                         }),
                                     },
+                                    {
+                                        status: true,
+                                    }
                                 ],
                             },
                         },
@@ -427,7 +433,6 @@ export class ConferenceApiLintService {
                             select : {
                                 date_type : true, 
                                 date_value : true, 
-                                status : true
                             }
                         },
                         notification_dates : {

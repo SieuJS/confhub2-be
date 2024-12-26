@@ -21,6 +21,7 @@ import { ScraperModule } from './scraper/scraper.module';
 import { ConfApiLintModule } from './conf-api-lint/conf-api-lint.module';
 import { Service } from './tokens';
 import { CrawlBullJobModule } from './crawl-bull-job/crawl-bull-job.module';
+import { CrawlJournalModule } from './crawl-journal/crawl-journal.module';
 @Module({
     imports: [
         CommonModule,
@@ -66,6 +67,7 @@ import { CrawlBullJobModule } from './crawl-bull-job/crawl-bull-job.module';
         ScraperModule,
         ConfApiLintModule,
         CrawlBullJobModule,
+        CrawlJournalModule,
     ],
 })
 export class ApplicationModule {}

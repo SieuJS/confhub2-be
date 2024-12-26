@@ -13,7 +13,7 @@ export class CrawlApiPipelineService {
     constructor() {}
     async transferToCrawlApi(
         input: ConferenceCrawlInput
-    ): Promise<ConferenceCrawlData | null> {
+    ): Promise<ConferenceCrawlData | undefined> {
         try {
             const response = await fetch(CRAWL_API_URL + "/upload", {
                 method: "POST",
@@ -28,16 +28,16 @@ export class CrawlApiPipelineService {
                 throw new HttpException(responseData, response.status);
             }
             if (!responseData.data) {
-                return null;
+                return undefined;
             }
             const crawlData: ConferenceCrawlData[] = responseData.data;
             if (crawlData.length === 0) {
-                return null;
+                return undefined;
             }
             if (crawlData.length >= 1) {
-                return crawlData.pop() || null;
+                return crawlData.pop();
             }
-            return null;
+            return undefined;
         } catch (error) {
             console.log(error);
             throw new HttpException(error.message, 500);
